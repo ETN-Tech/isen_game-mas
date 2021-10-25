@@ -13,33 +13,33 @@ public class Map {
     // Probability in percentage that a neutral cell contains an obstacle at game initialization
     private int obstacleProba = 10;
 
-    private int width = 10;
-    private int height = 10;
-    private int safeZoneWidth = 3;
-    private int safeZoneHeight = 3;
+    private int columns = 10;
+    private int rows = 10;
+    private int safeZoneColumns = 3;
+    private int safeZoneRows = 3;
 
-    private ArrayList<MapCell> cells = new ArrayList<>();
+    private final MapCell[][] cells = new MapCell[columns][rows];
 
     public Map() {
         // Create map cells
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < columns; x++) {
 
                 // SafeZone Elfs (haut gauche)
-                if (x < safeZoneWidth && y < safeZoneHeight) {
-                    cells.add(new MapCell(x, y, CellType.ELF));
+                if (x < safeZoneColumns && y < safeZoneRows) {
+                    cells[x][y] = new MapCell(x, y, CellType.ELF);
                 }
                 // SafeZone Gobelins (haut droite)
-                else if (x >= (width - safeZoneWidth) && y < safeZoneHeight) {
-                    cells.add(new MapCell(x, y, CellType.GOBLIN));
+                else if (x >= (columns - safeZoneColumns) && y < safeZoneRows) {
+                    cells[x][y] = new MapCell(x, y, CellType.GOBLIN);
                 }
                 // SafeZone Humains (bas droite)
-                else if (x >= (width - safeZoneWidth) && y >= (height - safeZoneHeight)) {
-                    cells.add(new MapCell(x, y, CellType.HUMAN));
+                else if (x >= (columns - safeZoneColumns) && y >= (rows - safeZoneRows)) {
+                    cells[x][y] = new MapCell(x, y, CellType.HUMAN);
                 }
                 // SafeZone Orcs (bas gauche)
-                else if (x < 3 && y >= (height - safeZoneHeight)) {
-                    cells.add(new MapCell(x, y, CellType.ORC));
+                else if (x < 3 && y >= (rows - safeZoneRows)) {
+                    cells[x][y] = new MapCell(x, y, CellType.ORC);
                 }
                 // Neutral cell
                 else {
@@ -51,13 +51,13 @@ public class Map {
                         newCell.setEntity(new Obstacle());
                     }
 
-                    cells.add(newCell);
+                    cells[x][y] = newCell;
                 }
             }
         }
     }
 
-    public ArrayList<MapCell> getCells() {
+    public MapCell[][] getCells() {
         return cells;
     }
 
@@ -68,30 +68,29 @@ public class Map {
 
         StringBuilder strMap = new StringBuilder("|");
 
-        for (MapCell cell: cells) {
-            if (cell.getEntity() == null) {
-                strMap.append(" |");
-            }
-            else if (cell.getEntity().getType() == EntityType.OBSTACLE) {
-                strMap.append("x|");
-            }
-            else if (cell.getEntity().getType() == EntityType.ELF) {
-                strMap.append("E|");
-            }
-            else if (cell.getEntity().getType() == EntityType.GOBLIN) {
-                strMap.append("G|");
-            }
-            else if (cell.getEntity().getType() == EntityType.HUMAN) {
-                strMap.append("H|");
-            }
-            else if (cell.getEntity().getType() == EntityType.ORC) {
-                strMap.append("O|");
-            }
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < columns; x++) {
+                MapCell cell = cells[x][y];
 
-            // if end of map (width), print line
-            if (cell.getX() == width - 1) {
-                System.out.println(strMap);
-                strMap = new StringBuilder("|");
+                if (cell.getEntity() == null) {
+                    strMap.append(" |");
+                } else if (cell.getEntity().getType() == EntityType.OBSTACLE) {
+                    strMap.append("x|");
+                } else if (cell.getEntity().getType() == EntityType.ELF) {
+                    strMap.append("E|");
+                } else if (cell.getEntity().getType() == EntityType.GOBLIN) {
+                    strMap.append("G|");
+                } else if (cell.getEntity().getType() == EntityType.HUMAN) {
+                    strMap.append("H|");
+                } else if (cell.getEntity().getType() == EntityType.ORC) {
+                    strMap.append("O|");
+                }
+
+                // if end of map (width), print line
+                if (cell.getX() == columns - 1) {
+                    System.out.println(strMap);
+                    strMap = new StringBuilder("|");
+                }
             }
         }
     }
@@ -103,25 +102,29 @@ public class Map {
 
         StringBuilder strMap = new StringBuilder("|");
 
-        for (MapCell cell: cells) {
-            switch (cell.getType()) {
-                case ELF -> strMap.append("E|");
-                case GOBLIN -> strMap.append("G|");
-                case HUMAN -> strMap.append("H|");
-                case ORC -> strMap.append("O|");
-                case NEUTRAL -> {
-                    if (cell.getEntity().getType() == EntityType.OBSTACLE) {
-                        strMap.append("x|");
-                    } else {
-                        strMap.append(" |");
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < columns; x++) {
+                MapCell cell = cells[x][y];
+
+                switch (cell.getType()) {
+                    case ELF -> strMap.append("E|");
+                    case GOBLIN -> strMap.append("G|");
+                    case HUMAN -> strMap.append("H|");
+                    case ORC -> strMap.append("O|");
+                    case NEUTRAL -> {
+                        if (cell.getEntity().getType() == EntityType.OBSTACLE) {
+                            strMap.append("x|");
+                        } else {
+                            strMap.append(" |");
+                        }
                     }
                 }
-            }
 
-            // if end of map (width), print line
-            if (cell.getX() == width - 1) {
-                System.out.println(strMap);
-                strMap = new StringBuilder("|");
+                // if end of map (width), print line
+                if (cell.getX() == columns - 1) {
+                    System.out.println(strMap);
+                    strMap = new StringBuilder("|");
+                }
             }
         }
     }

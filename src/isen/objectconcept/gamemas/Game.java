@@ -1,13 +1,12 @@
 package isen.objectconcept.gamemas;
 
 import isen.objectconcept.gamemas.map.Map;
-import isen.objectconcept.gamemas.map.MapCell;
 
 public class Game {
     
     private final Map map = new Map();
     private final int maxSteps;
-    private int currectStep = 0;
+    private int currentStep = 0;
 
     public Game(int maxSteps) {
         this.maxSteps = maxSteps;
@@ -19,9 +18,9 @@ public class Game {
         boolean gameRunning = true;
 
         // Looping through steps
-        while (currectStep < maxSteps && gameRunning) {
+        while (currentStep < maxSteps && gameRunning) {
             // increase steps
-            currectStep++;
+            currentStep++;
 
             // TODO do things...
         }
