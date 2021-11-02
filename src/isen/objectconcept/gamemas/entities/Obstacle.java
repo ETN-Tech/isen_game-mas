@@ -6,6 +6,6 @@ import isen.objectconcept.gamemas.abstracts.CellEntity;
 public class Obstacle extends CellEntity {
 
     public Obstacle() {
-        super.type = EntityType.OBSTACLE;
+        super(EntityType.OBSTACLE, "x ");
     }
 }

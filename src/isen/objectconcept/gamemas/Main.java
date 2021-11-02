@@ -10,10 +10,10 @@ public class Main {
         Game game = new Game(20);
 
         Obstacle obstacle = new Obstacle();
-        Elf elf = new Elf();
-        Goblin goblin = new Goblin();
-        Human human = new Human();
-        Orc orc = new Orc();
+        Elf elf = new Elf("E");
+        Goblin goblin = new Goblin("G");
+        Human human = new Human("H");
+        Orc orc = new Orc("O");
 
         System.out.println("Obstacle type: "+ obstacle.getType());
         System.out.println("Elf type: "+ elf.getType());

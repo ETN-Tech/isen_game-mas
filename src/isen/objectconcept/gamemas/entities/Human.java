@@ -5,7 +5,7 @@ import isen.objectconcept.gamemas.enums.EntityType;
 
 public class Human extends HumanBeing {
 
-    public Human() {
-        super.type = EntityType.HUMAN;
+    public Human(String figure) {
+        super(EntityType.HUMAN, figure);
     }
 }

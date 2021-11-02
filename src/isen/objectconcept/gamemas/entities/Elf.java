@@ -5,7 +5,7 @@ import isen.objectconcept.gamemas.enums.EntityType;
 
 public class Elf extends HumanBeing {
 
-    public Elf() {
-        super.type = EntityType.ELF;
+    public Elf(String figure) {
+        super(EntityType.ELF, figure);
     }
 }

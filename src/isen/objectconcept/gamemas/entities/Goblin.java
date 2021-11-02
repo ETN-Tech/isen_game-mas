@@ -5,7 +5,7 @@ import isen.objectconcept.gamemas.enums.EntityType;
 
 public class Goblin extends HumanBeing {
 
-    public Goblin() {
-        super.type = EntityType.GOBLIN;
+    public Goblin(String figure) {
+        super(EntityType.GOBLIN, figure);
     }
 }
