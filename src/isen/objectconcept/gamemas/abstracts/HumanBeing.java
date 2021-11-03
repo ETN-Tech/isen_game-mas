@@ -11,4 +11,8 @@ public abstract class HumanBeing extends CellEntity {
         super(type, figure);
         this.availableDirections = availableDirections;
     }
+
+    public Direction[] getAvailableDirections() {
+        return availableDirections;
+    }
 }
