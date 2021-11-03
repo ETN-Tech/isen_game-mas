@@ -22,7 +22,8 @@ public class Game {
             // increase steps
             currentStep++;
 
-            // TODO do things...
+            // Play a turn
+            map.playTurn();
         }
 
         System.out.println();

@@ -1,12 +1,14 @@
 package isen.objectconcept.gamemas.map;
 
+import isen.objectconcept.gamemas.abstracts.HumanBeing;
 import isen.objectconcept.gamemas.entities.*;
 import isen.objectconcept.gamemas.enums.CellType;
+import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.function.Consumer;
 
 public class Map {
 
@@ -31,6 +33,7 @@ public class Map {
         return cells;
     }
 
+    /* ------ INITIALIZATION ------ */
     private void initMap() {
         // Create map cells
         for (int y = 0; y < rows; y++) {
@@ -104,6 +107,56 @@ public class Map {
         MapCell randomCell = emptyCells.get(random.nextInt(emptyCells.size()));
 
         return cells[randomCell.getX()][randomCell.getY()];
+    }
+
+    /* ----- GAME MANAGEMENT ----- */
+    public void playTurn() {
+
+        // Loop through cells
+        for (MapCell[] cellsx: cells) {
+            for (MapCell currentCell: cellsx) {
+
+                // Check if cell contains a Creature
+                if (currentCell.getEntity().getType() != EntityType.EMPTY && currentCell.getEntity().getType() != EntityType.OBSTACLE) {
+                    ArrayList<Direction> availableDirections = new ArrayList<>(List.of(((HumanBeing) currentCell.getEntity()).getAvailableDirections()));
+
+                    boolean validMove = false;
+
+                    do {
+                        Direction randomDirection = availableDirections.get(random.nextInt(availableDirections.size()));
+                        MapCell targetCell;
+
+                        switch (randomDirection) {
+                            case NW -> targetCell = cells[currentCell.getX() - 1][currentCell.getY() - 1];
+                            case N -> targetCell = cells[currentCell.getX()][currentCell.getY() - 1];
+                            case NE -> targetCell = cells[currentCell.getX() + 1][currentCell.getY() - 1];
+                            case E -> targetCell = cells[currentCell.getX() + 1][currentCell.getY()];
+                            case SE -> targetCell = cells[currentCell.getX() + 1][currentCell.getY() + 1];
+                            case S -> targetCell = cells[currentCell.getX()][currentCell.getY() + 1];
+                            case SW -> targetCell = cells[currentCell.getX() - 1][currentCell.getY() + 1];
+                            case W -> targetCell = cells[currentCell.getX() - 1][currentCell.getY()];
+                            default -> throw new IllegalStateException("Unexpected value: " + randomDirection);
+                        }
+
+                        if (targetCell.getEntity().getType() == EntityType.EMPTY) {
+                            // move to targetCell
+                            targetCell.setEntity(currentCell.getEntity());
+                            currentCell.setEntity(new Empty());
+                            validMove = true;
+                        }
+                        else if (targetCell.getEntity().getType() != EntityType.OBSTACLE) {
+                            // creatures meet
+                            handleCreatureMeet(currentCell, targetCell);
+                        }
+                    } while(!validMove); // Loop while move is invalid
+                }
+            }
+        }
+    }
+
+    private void handleCreatureMeet(MapCell currentCell, MapCell targetCell) {
+        // TODO check ally ?
+        // then fight ?
     }
 
     /* ----- MAP PRINT ----- */
