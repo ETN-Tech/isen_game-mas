@@ -22,14 +22,14 @@ public class Map {
     private final int safeZoneColumns = 3;
     private final int safeZoneRows = 3;
 
-    private final MapCell[][] cells = new MapCell[columns][rows];
+    private final Cell[][] cells = new Cell[columns][rows];
 
     public Map() {
         initMap();
         initCreatures();
     }
 
-    public MapCell[][] getCells() {
+    public Cell[][] getCells() {
         return cells;
     }
 
@@ -41,23 +41,23 @@ public class Map {
 
                 // SafeZone Elfs (haut gauche)
                 if (x < safeZoneColumns && y < safeZoneRows) {
-                    cells[x][y] = new MapCell(x, y, CellType.ELF);
+                    cells[x][y] = new Cell(x, y, CellType.ELF);
                 }
                 // SafeZone Gobelins (haut droite)
                 else if (x >= (columns - safeZoneColumns) && y < safeZoneRows) {
-                    cells[x][y] = new MapCell(x, y, CellType.GOBLIN);
+                    cells[x][y] = new Cell(x, y, CellType.GOBLIN);
                 }
                 // SafeZone Humains (bas droite)
                 else if (x >= (columns - safeZoneColumns) && y >= (rows - safeZoneRows)) {
-                    cells[x][y] = new MapCell(x, y, CellType.HUMAN);
+                    cells[x][y] = new Cell(x, y, CellType.HUMAN);
                 }
                 // SafeZone Orcs (bas gauche)
                 else if (x < 3 && y >= (rows - safeZoneRows)) {
-                    cells[x][y] = new MapCell(x, y, CellType.ORC);
+                    cells[x][y] = new Cell(x, y, CellType.ORC);
                 }
                 // Neutral cell
                 else {
-                    MapCell newCell = new MapCell(x, y, CellType.NEUTRAL);
+                    Cell newCell = new Cell(x, y, CellType.NEUTRAL);
 
                     // Add randomly an obstacle
                     int randomProba = random.nextInt(100) + 1;
@@ -92,19 +92,19 @@ public class Map {
 
     }
 
-    private MapCell pickRandomEmptyCell(int rowStart, int rowEnd, int columnStart, int columnEnd) {
-        ArrayList<MapCell> emptyCells = new ArrayList<>();
+    private Cell pickRandomEmptyCell(int rowStart, int rowEnd, int columnStart, int columnEnd) {
+        ArrayList<Cell> emptyCells = new ArrayList<>();
 
         for (int y = rowStart; y < rowEnd; y++) {
             for (int x = columnStart; x < columnEnd; x++) {
-                MapCell cell = cells[x][y];
+                Cell cell = cells[x][y];
 
                 if (cell.getEntity() == null || cell.getEntity().getType() == EntityType.EMPTY) {
                     emptyCells.add(cell);
                 }
             }
         }
-        MapCell randomCell = emptyCells.get(random.nextInt(emptyCells.size()));
+        Cell randomCell = emptyCells.get(random.nextInt(emptyCells.size()));
 
         return cells[randomCell.getX()][randomCell.getY()];
     }
@@ -113,8 +113,8 @@ public class Map {
     public void playTurn() {
 
         // Loop through cells
-        for (MapCell[] cellsx: cells) {
-            for (MapCell currentCell: cellsx) {
+        for (Cell[] cellsx: cells) {
+            for (Cell currentCell: cellsx) {
 
                 // Check if cell contains a Creature
                 if (currentCell.getEntity().getType() != EntityType.EMPTY && currentCell.getEntity().getType() != EntityType.OBSTACLE) {
@@ -124,7 +124,7 @@ public class Map {
 
                     do {
                         Direction randomDirection = availableDirections.get(random.nextInt(availableDirections.size()));
-                        MapCell targetCell;
+                        Cell targetCell;
 
                         switch (randomDirection) {
                             case NW -> targetCell = cells[currentCell.getX() - 1][currentCell.getY() - 1];
@@ -154,7 +154,7 @@ public class Map {
         }
     }
 
-    private void handleCreatureMeet(MapCell currentCell, MapCell targetCell) {
+    private void handleCreatureMeet(Cell currentCell, Cell targetCell) {
         // TODO check ally ?
         // then fight ?
     }
@@ -168,7 +168,7 @@ public class Map {
 
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < columns; x++) {
-                MapCell cell = cells[x][y];
+                Cell cell = cells[x][y];
 
                 strMap.append(" ").append(cell.getEntity().getFigure()).append(" |");
 
@@ -191,7 +191,7 @@ public class Map {
 
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < columns; x++) {
-                MapCell cell = cells[x][y];
+                Cell cell = cells[x][y];
 
                 switch (cell.getType()) {
                     case ELF -> strMap.append(" E |");

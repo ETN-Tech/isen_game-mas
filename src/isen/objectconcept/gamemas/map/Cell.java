@@ -4,13 +4,13 @@ import isen.objectconcept.gamemas.abstracts.CellEntity;
 import isen.objectconcept.gamemas.entities.Empty;
 import isen.objectconcept.gamemas.enums.CellType;
 
-public class MapCell {
+public class Cell {
     private int x;
     private int y;
     private CellType type;
     private CellEntity entity = new Empty();
 
-    public MapCell(int x, int y, CellType type) {
+    public Cell(int x, int y, CellType type) {
         this.x = x;
         this.y = y;
         this.type = type;
