@@ -1,7 +1,12 @@
 package isen.objectconcept.gamemas.map;
 
+import isen.objectconcept.gamemas.abstracts.CellEntity;
 import isen.objectconcept.gamemas.abstracts.HumanBeing;
 import isen.objectconcept.gamemas.entities.*;
+import isen.objectconcept.gamemas.entities.masters.MasterElf;
+import isen.objectconcept.gamemas.entities.masters.MasterGoblin;
+import isen.objectconcept.gamemas.entities.masters.MasterHuman;
+import isen.objectconcept.gamemas.entities.masters.MasterOrc;
 import isen.objectconcept.gamemas.enums.CellType;
 import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
@@ -138,25 +143,16 @@ public class Map {
                             default -> throw new IllegalStateException("Unexpected value: " + randomDirection);
                         }
 
-                        if (targetCell.getEntity().getType() == EntityType.EMPTY) {
-                            // move to targetCell
-                            targetCell.setEntity(currentCell.getEntity());
-                            currentCell.setEntity(new Empty());
+                        // Check if targetCell is not obstacle, otherwise invalid move
+                        if (targetCell.getEntity().getType() == EntityType.OBSTACLE) {
+                            currentCell.entityMeet(targetCell);
                             validMove = true;
                         }
-                        else if (targetCell.getEntity().getType() != EntityType.OBSTACLE) {
-                            // creatures meet
-                            handleCreatureMeet(currentCell, targetCell);
-                        }
+
                     } while(!validMove); // Loop while move is invalid
                 }
             }
         }
-    }
-
-    private void handleCreatureMeet(Cell currentCell, Cell targetCell) {
-        // TODO check ally ?
-        // then fight ?
     }
 
     /* ----- MAP PRINT ----- */

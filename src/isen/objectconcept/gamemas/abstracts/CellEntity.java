@@ -18,4 +18,12 @@ public abstract class CellEntity {
     public String getFigure() {
         return figure;
     }
+
+    public void fightWith(CellEntity entity) {
+
+    }
+
+    public void exchangeMessageWith(CellEntity entity) {
+
+    }
 }
