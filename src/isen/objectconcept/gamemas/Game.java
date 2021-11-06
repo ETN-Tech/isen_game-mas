@@ -5,11 +5,11 @@ import isen.objectconcept.gamemas.map.Map;
 public class Game {
     
     private final Map map = new Map();
-    private final int maxSteps;
-    private int currentStep = 0;
+    private final int maxTurns;
+    private int currentTurn = 0;
 
-    public Game(int maxSteps) {
-        this.maxSteps = maxSteps;
+    public Game(int maxTurns) {
+        this.maxTurns = maxTurns;
     }
 
     public void start() {
@@ -18,19 +18,19 @@ public class Game {
         boolean gameRunning = true;
 
         // Looping through steps
-        while (currentStep < maxSteps && gameRunning) {
-            // increase steps
-            currentStep++;
-
+        while (currentTurn < maxTurns && gameRunning) {
             // Play a turn
-            map.playTurn();
+            playTurn();
         }
 
         System.out.println();
     }
 
-    private void init() {
-        // TODO init game...
+    private void playTurn() {
+        // increase turns
+        currentTurn++;
+
+        map.moveEntities();
     }
 
     /* ----- GETTERS ----- */

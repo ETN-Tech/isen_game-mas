@@ -114,7 +114,7 @@ public class Map {
     }
 
     /* ----- GAME MANAGEMENT ----- */
-    public void playTurn() {
+    public void moveEntities() {
 
         // Loop through cells
         for (Cell[] cellsx: cells) {
