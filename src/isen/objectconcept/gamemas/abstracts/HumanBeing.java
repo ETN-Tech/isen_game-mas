@@ -5,7 +5,7 @@ import isen.objectconcept.gamemas.enums.EntityType;
 
 import java.util.ArrayList;
 
-public abstract class HumanBeing extends CellEntity {
+public abstract class HumanBeing extends Entity {
 
     protected Direction[] availableDirections;
     protected ArrayList<Message> messages = new ArrayList<>();

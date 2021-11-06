@@ -1,6 +1,6 @@
 package isen.objectconcept.gamemas.map;
 
-import isen.objectconcept.gamemas.abstracts.CellEntity;
+import isen.objectconcept.gamemas.abstracts.Entity;
 import isen.objectconcept.gamemas.entities.Empty;
 import isen.objectconcept.gamemas.enums.CellType;
 import isen.objectconcept.gamemas.enums.EntityType;
@@ -9,7 +9,7 @@ public class Cell {
     private int x;
     private int y;
     private CellType type;
-    private CellEntity entity = new Empty();
+    private Entity entity = new Empty();
 
     public Cell(int x, int y, CellType type) {
         this.x = x;
@@ -29,11 +29,11 @@ public class Cell {
         return type;
     }
 
-    public CellEntity getEntity() {
+    public Entity getEntity() {
         return entity;
     }
 
-    public void setEntity(CellEntity entity) {
+    public void setEntity(Entity entity) {
         this.entity = entity;
     }
 

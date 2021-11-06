@@ -2,11 +2,11 @@ package isen.objectconcept.gamemas.abstracts;
 
 import isen.objectconcept.gamemas.enums.EntityType;
 
-public abstract class CellEntity {
+public abstract class Entity {
     protected EntityType type;
     protected String figure;
 
-    public CellEntity(EntityType type, String figure) {
+    public Entity(EntityType type, String figure) {
         this.type = type;
         this.figure = figure;
     }
@@ -19,11 +19,11 @@ public abstract class CellEntity {
         return figure;
     }
 
-    public void fightWith(CellEntity entity) {
+    public void fightWith(Entity entity) {
 
     }
 
-    public void exchangeMessageWith(CellEntity entity) {
+    public void exchangeMessageWith(Entity entity) {
 
     }
 }

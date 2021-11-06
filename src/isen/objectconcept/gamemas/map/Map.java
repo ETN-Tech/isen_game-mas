@@ -1,6 +1,5 @@
 package isen.objectconcept.gamemas.map;
 
-import isen.objectconcept.gamemas.abstracts.CellEntity;
 import isen.objectconcept.gamemas.abstracts.HumanBeing;
 import isen.objectconcept.gamemas.entities.*;
 import isen.objectconcept.gamemas.entities.masters.MasterElf;
