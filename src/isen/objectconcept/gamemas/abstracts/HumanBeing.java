@@ -4,15 +4,18 @@ import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class HumanBeing extends Entity {
 
     protected Direction[] availableDirections;
     protected ArrayList<Message> messages = new ArrayList<>();
 
-    protected HumanBeing(EntityType type, String figure, Direction[] availableDirections) {
+    protected HumanBeing(EntityType type, String figure, Direction[] availableDirections, Message message) {
         super(type, figure);
         this.availableDirections = availableDirections;
+        // add message to this.messages list
+        this.messages.add(message);
     }
 
     public Direction[] getAvailableDirections() {
