@@ -22,13 +22,13 @@ public class Map {
 
     private final Random random = new Random();
     // Probability in percentage that a neutral cell contains an obstacle at game initialization
-    private final int obstacleProba = 10;
-    private final int numberCreaturesPerRace = 4;
+    private static final int obstacleProba = 10;
+    private static final int numberCreaturesPerRace = 4;
 
-    private final int columns = 10;
-    private final int rows = 10;
-    private final int safeZoneColumns = 3;
-    private final int safeZoneRows = 3;
+    private static final int columns = 10;
+    private static final int rows = 10;
+    private static final int safeZoneColumns = 3;
+    private static final int safeZoneRows = 3;
 
     private final Cell[][] cells = new Cell[columns][rows];
 
