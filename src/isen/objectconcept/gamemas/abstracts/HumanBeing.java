@@ -1,5 +1,6 @@
 package isen.objectconcept.gamemas.abstracts;
 
+import isen.objectconcept.gamemas.Game;
 import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 
@@ -10,6 +11,7 @@ public abstract class HumanBeing extends Entity {
     protected ArrayList<Direction> forwardDirections = new ArrayList<>();
     protected ArrayList<Direction> backwardDirections = new ArrayList<>();
     protected ArrayList<Message> messages = new ArrayList<>();
+    protected int energyPoints = Game.getMaxEnergyPoints();
 
     protected HumanBeing(EntityType type, String figure, ArrayList<Direction> backwardDirections, Message message) {
         super(type, figure);
@@ -29,6 +31,14 @@ public abstract class HumanBeing extends Entity {
 
     public ArrayList<Direction> getBackwardDirections() {
         return backwardDirections;
+    }
+
+    public int getEnergyPoints() {
+        return energyPoints;
+    }
+
+    public void decreaseEnergyPoints() {
+        energyPoints--;
     }
 
     /* ----- MESSAGES MANAGEMENT ----- */

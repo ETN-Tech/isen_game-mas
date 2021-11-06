@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("PROGRAM STARTED\n");
 
-        Game game = new Game(20);
+        Game game = new Game();
 
         Obstacle obstacle = new Obstacle();
         Elf elf = new Elf("E");

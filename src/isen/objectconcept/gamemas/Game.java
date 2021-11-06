@@ -7,11 +7,12 @@ public class Game {
     private final Map map = new Map();
 
     boolean gameRunning = true;
-    private final int maxTurns;
+    private static final int maxTurns = 20;
     private int currentTurn = 0;
+    private static final int maxEnergyPoints = 4;
 
-    public Game(int maxTurns) {
-        this.maxTurns = maxTurns;
+    public Game() {
+
     }
 
     public void start() {
@@ -37,6 +38,10 @@ public class Game {
     /* ----- GETTERS ----- */
     public Map getMap() {
         return map;
+    }
+
+    public static int getMaxEnergyPoints() {
+        return maxEnergyPoints;
     }
 
     public void setGameRunning(boolean gameRunning) {
