@@ -5,6 +5,8 @@ import isen.objectconcept.gamemas.map.Map;
 public class Game {
     
     private final Map map = new Map();
+
+    boolean gameRunning = true;
     private final int maxTurns;
     private int currentTurn = 0;
 
@@ -15,7 +17,6 @@ public class Game {
     public void start() {
         System.out.println("Game started");
 
-        boolean gameRunning = true;
 
         // Looping through steps
         while (currentTurn < maxTurns && gameRunning) {
@@ -36,5 +37,9 @@ public class Game {
     /* ----- GETTERS ----- */
     public Map getMap() {
         return map;
+    }
+
+    public void setGameRunning(boolean gameRunning) {
+        this.gameRunning = gameRunning;
     }
 }
