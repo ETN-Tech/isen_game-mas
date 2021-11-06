@@ -1,6 +1,5 @@
 package isen.objectconcept.gamemas.entities;
 
-import isen.objectconcept.gamemas.entities.humanbeings.HumanBeing;
 import isen.objectconcept.gamemas.enums.EntityType;
 
 public abstract class Entity {
@@ -18,39 +17,5 @@ public abstract class Entity {
 
     public String getFigure() {
         return figure;
-    }
-
-
-    /**
-     * Perform actions when this entity meet the otherEntity
-     * @param otherEntity entity to meet
-     */
-    public void meet(HumanBeing otherEntity) {
-        EntityType ally;
-
-        switch (type) {
-            case ELF -> ally = EntityType.HUMAN;
-            case GOBLIN -> ally = EntityType.ORC;
-            case HUMAN -> ally = EntityType.ELF;
-            case ORC -> ally = EntityType.GOBLIN;
-            default -> throw new IllegalStateException("Unexpected value: " + type);
-        }
-
-        // check if ally
-        if (otherEntity.getType() == ally) {
-            // ally, exchange message
-            exchangeMessageWith(otherEntity);
-        } else {
-            // enemy, fight
-            fightWith(otherEntity);
-        }
-    }
-
-    public void fightWith(Entity entity) {
-
-    }
-
-    public void exchangeMessageWith(Entity entity) {
-
     }
 }
