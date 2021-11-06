@@ -1,11 +1,15 @@
 package isen.objectconcept.gamemas.map;
 
-import isen.objectconcept.gamemas.abstracts.HumanBeing;
+import isen.objectconcept.gamemas.entities.humanbeings.HumanBeing;
 import isen.objectconcept.gamemas.entities.*;
-import isen.objectconcept.gamemas.entities.masters.MasterElf;
-import isen.objectconcept.gamemas.entities.masters.MasterGoblin;
-import isen.objectconcept.gamemas.entities.masters.MasterHuman;
-import isen.objectconcept.gamemas.entities.masters.MasterOrc;
+import isen.objectconcept.gamemas.entities.humanbeings.Elf;
+import isen.objectconcept.gamemas.entities.humanbeings.Goblin;
+import isen.objectconcept.gamemas.entities.humanbeings.Human;
+import isen.objectconcept.gamemas.entities.humanbeings.Orc;
+import isen.objectconcept.gamemas.entities.humanbeings.masters.MasterElf;
+import isen.objectconcept.gamemas.entities.humanbeings.masters.MasterGoblin;
+import isen.objectconcept.gamemas.entities.humanbeings.masters.MasterHuman;
+import isen.objectconcept.gamemas.entities.humanbeings.masters.MasterOrc;
 import isen.objectconcept.gamemas.enums.CellType;
 import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;

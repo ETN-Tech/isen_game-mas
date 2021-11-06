@@ -1,9 +1,8 @@
 package isen.objectconcept.gamemas.map;
 
-import isen.objectconcept.gamemas.abstracts.Entity;
+import isen.objectconcept.gamemas.entities.Entity;
 import isen.objectconcept.gamemas.entities.Empty;
 import isen.objectconcept.gamemas.enums.CellType;
-import isen.objectconcept.gamemas.enums.EntityType;
 
 public class Cell {
     private int x;

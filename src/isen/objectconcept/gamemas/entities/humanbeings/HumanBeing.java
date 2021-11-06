@@ -1,6 +1,8 @@
-package isen.objectconcept.gamemas.abstracts;
+package isen.objectconcept.gamemas.entities.humanbeings;
 
 import isen.objectconcept.gamemas.Game;
+import isen.objectconcept.gamemas.entities.Entity;
+import isen.objectconcept.gamemas.messages.Message;
 import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 

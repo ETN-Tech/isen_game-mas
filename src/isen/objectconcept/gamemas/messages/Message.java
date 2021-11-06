@@ -1,4 +1,4 @@
-package isen.objectconcept.gamemas.abstracts;
+package isen.objectconcept.gamemas.messages;
 
 import isen.objectconcept.gamemas.enums.MessageType;
 

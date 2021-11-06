@@ -1,6 +1,5 @@
-package isen.objectconcept.gamemas.entities;
+package isen.objectconcept.gamemas.entities.humanbeings;
 
-import isen.objectconcept.gamemas.abstracts.HumanBeing;
 import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 import isen.objectconcept.gamemas.messages.MessageHuman;

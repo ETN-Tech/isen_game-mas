@@ -1,5 +1,6 @@
-package isen.objectconcept.gamemas.abstracts;
+package isen.objectconcept.gamemas.entities;
 
+import isen.objectconcept.gamemas.entities.humanbeings.HumanBeing;
 import isen.objectconcept.gamemas.enums.EntityType;
 
 public abstract class Entity {
