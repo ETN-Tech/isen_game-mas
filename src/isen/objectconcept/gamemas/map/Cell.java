@@ -37,31 +37,28 @@ public class Cell {
         this.entity = entity;
     }
 
+    /**
+     * Perform actions when entity in this Cell meet the entity of targetCell
+     * @param targetCell cell where there is the other entity to meet
+     */
     public void entityMeet(Cell targetCell) {
-        if (targetCell.getEntity().getType() == EntityType.EMPTY) {
-            // move entity to targetCell
-            targetCell.setEntity(entity);
-            this.setEntity(new Empty());
+        EntityType ally;
+
+        switch (entity.getType()) {
+            case ELF -> ally = EntityType.HUMAN;
+            case GOBLIN -> ally = EntityType.ORC;
+            case HUMAN -> ally = EntityType.ELF;
+            case ORC -> ally = EntityType.GOBLIN;
+            default -> throw new IllegalStateException("Unexpected value: " + entity.getType());
+        }
+
+        // check if ally
+        if (targetCell.getEntity().getType() == ally) {
+            // ally, exchange message
+            entity.exchangeMessageWith(targetCell.getEntity());
         } else {
-            // check allies
-            EntityType ally;
-
-            switch (entity.getType()) {
-                case ELF -> ally = EntityType.HUMAN;
-                case GOBLIN -> ally = EntityType.ORC;
-                case HUMAN -> ally = EntityType.ELF;
-                case ORC -> ally = EntityType.GOBLIN;
-                default -> throw new IllegalStateException("Unexpected value: " + entity.getType());
-            }
-
-            // check if ally
-            if (targetCell.getEntity().getType() == ally) {
-                // ally, exchange message
-                entity.exchangeMessageWith(targetCell.getEntity());
-            } else {
-                // enemy, fight
-                entity.fightWith(targetCell.getEntity());
-            }
+            // enemy, fight
+            entity.fightWith(targetCell.getEntity());
         }
     }
 
