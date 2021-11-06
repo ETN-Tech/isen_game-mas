@@ -2,6 +2,7 @@ package isen.objectconcept.gamemas.entities.humanbeings;
 
 import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
+import isen.objectconcept.gamemas.messages.Message;
 import isen.objectconcept.gamemas.messages.MessageElf;
 
 import java.util.ArrayList;

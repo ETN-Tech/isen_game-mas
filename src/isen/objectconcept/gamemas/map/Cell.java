@@ -38,7 +38,7 @@ public class Cell {
 
     @Override
     public String toString() {
-        return "MapCell{" +
+        return "Cell{" +
                 "x=" + x +
                 ", y=" + y +
                 ", type=" + type +
