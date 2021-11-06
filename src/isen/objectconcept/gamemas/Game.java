@@ -6,13 +6,12 @@ public class Game {
     
     private final Map map = new Map();
 
-    boolean gameRunning = true;
+    static boolean gameRunning = true;
     private static final int maxTurns = 20;
     private int currentTurn = 0;
     private static final int maxEnergyPoints = 4;
 
     public Game() {
-
     }
 
     public void start() {
@@ -33,6 +32,7 @@ public class Game {
         currentTurn++;
 
         map.moveEntities();
+        map.print();
     }
 
     /* ----- GETTERS ----- */
@@ -44,7 +44,8 @@ public class Game {
         return maxEnergyPoints;
     }
 
-    public void setGameRunning(boolean gameRunning) {
-        this.gameRunning = gameRunning;
+    public static void setGameOver(String message) {
+        gameRunning = false;
+        System.out.println(message);
     }
 }

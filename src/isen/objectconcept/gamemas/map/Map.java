@@ -6,10 +6,7 @@ import isen.objectconcept.gamemas.entities.humanbeings.Elf;
 import isen.objectconcept.gamemas.entities.humanbeings.Goblin;
 import isen.objectconcept.gamemas.entities.humanbeings.Human;
 import isen.objectconcept.gamemas.entities.humanbeings.Orc;
-import isen.objectconcept.gamemas.entities.humanbeings.masters.MasterElf;
-import isen.objectconcept.gamemas.entities.humanbeings.masters.MasterGoblin;
-import isen.objectconcept.gamemas.entities.humanbeings.masters.MasterHuman;
-import isen.objectconcept.gamemas.entities.humanbeings.masters.MasterOrc;
+import isen.objectconcept.gamemas.entities.humanbeings.masters.*;
 import isen.objectconcept.gamemas.enums.CellType;
 import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
@@ -35,6 +32,9 @@ public class Map {
     public Map() {
         initMap();
         initCreatures();
+
+        printCellsType();
+        print();
     }
 
     public Cell[][] getCells() {
@@ -128,14 +128,15 @@ public class Map {
         for (Cell[] cellsx: cells) {
             for (Cell currentCell: cellsx) {
 
-                // Check if cell contains a Creature
-                if (currentCell.getEntity() instanceof HumanBeing currentEntity) {
+                // Check if cell contains a HumanBeing that is not a Master
+                if (currentCell.getEntity() instanceof HumanBeing currentEntity && !(currentEntity instanceof Master)) {
+                    System.out.println(currentEntity);
                     boolean validMove = false;
 
                     ArrayList<Direction> availableDirections = new ArrayList<>();
 
-                    // check energyPoints, decide to go forward or backward
-                    if (currentEntity.getEnergyPoints() > 10) {
+                    // check energyPoints and baseMessage, decide to go forward or backward
+                    if (currentEntity.getEnergyPoints() > 10 || currentEntity.getBaseMessage() == null) {
                         availableDirections.addAll(currentEntity.getForwardDirections());
                     } else {
                         availableDirections.addAll(currentEntity.getBackwardDirections());
@@ -146,6 +147,8 @@ public class Map {
 
                     // Find an empty cell to move to
                     do {
+                        System.out.println(attainableCells);
+                        System.out.println(attainableCells.size());
                         int randomIndex = random.nextInt(attainableCells.size());
                         targetCell = attainableCells.get(randomIndex);
 
@@ -174,6 +177,10 @@ public class Map {
                 }
             }
         }
+    }
+
+    public void checkGameOver() {
+
     }
 
     /**
