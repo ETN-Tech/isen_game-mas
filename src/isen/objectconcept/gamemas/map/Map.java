@@ -126,6 +126,7 @@ public class Map {
 
                     boolean validMove = false;
 
+                    // Find an empty cell to move to
                     do {
                         Direction randomDirection = availableDirections.get(random.nextInt(availableDirections.size()));
                         Cell targetCell;
@@ -142,13 +143,18 @@ public class Map {
                             default -> throw new IllegalStateException("Unexpected value: " + randomDirection);
                         }
 
-                        // Check if targetCell is not obstacle, otherwise invalid move
-                        if (targetCell.getEntity().getType() == EntityType.OBSTACLE) {
-                            currentCell.entityMeet(targetCell);
+                        // Check if targetCell is empty, otherwise invalid move
+                        if (targetCell.getEntity().getType() == EntityType.EMPTY) {
+                            // move entity to targetCell
+                            targetCell.setEntity(currentCell.getEntity());
+                            currentCell.setEntity(new Empty());
+
                             validMove = true;
                         }
 
                     } while(!validMove); // Loop while move is invalid
+
+                    // TODO check around for fight
                 }
             }
         }
