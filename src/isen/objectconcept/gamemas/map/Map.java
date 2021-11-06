@@ -118,6 +118,10 @@ public class Map {
     }
 
     /* ----- GAME MANAGEMENT ----- */
+
+    /**
+     * Move all entities in the Map and make them meet people around
+     */
     public void moveEntities() {
 
         // Loop through cells
@@ -125,27 +129,25 @@ public class Map {
             for (Cell currentCell: cellsx) {
 
                 // Check if cell contains a Creature
-                if (currentCell.getEntity().getType() != EntityType.EMPTY && currentCell.getEntity().getType() != EntityType.OBSTACLE) {
-                    ArrayList<Direction> availableDirections = new ArrayList<>(List.of(((HumanBeing) currentCell.getEntity()).getAvailableDirections()));
-
+                if (currentCell.getEntity() instanceof HumanBeing currentEntity) {
                     boolean validMove = false;
+
+                    ArrayList<Direction> availableDirections = new ArrayList<>();
+
+                    // check energyPoints, decide to go forward or backward
+                    if (currentEntity.getEnergyPoints() > 10) {
+                        availableDirections.addAll(currentEntity.getForwardDirections());
+                    } else {
+                        availableDirections.addAll(currentEntity.getBackwardDirections());
+                    }
+
+                    ArrayList<Cell> attainableCells = getAttainableCellsAround(currentCell, availableDirections);
+                    Cell targetCell;
 
                     // Find an empty cell to move to
                     do {
-                        Direction randomDirection = availableDirections.get(random.nextInt(availableDirections.size()));
-                        Cell targetCell;
-
-                        switch (randomDirection) {
-                            case NW -> targetCell = cells[currentCell.getX() - 1][currentCell.getY() - 1];
-                            case N -> targetCell = cells[currentCell.getX()][currentCell.getY() - 1];
-                            case NE -> targetCell = cells[currentCell.getX() + 1][currentCell.getY() - 1];
-                            case E -> targetCell = cells[currentCell.getX() + 1][currentCell.getY()];
-                            case SE -> targetCell = cells[currentCell.getX() + 1][currentCell.getY() + 1];
-                            case S -> targetCell = cells[currentCell.getX()][currentCell.getY() + 1];
-                            case SW -> targetCell = cells[currentCell.getX() - 1][currentCell.getY() + 1];
-                            case W -> targetCell = cells[currentCell.getX() - 1][currentCell.getY()];
-                            default -> throw new IllegalStateException("Unexpected value: " + randomDirection);
-                        }
+                        int randomIndex = random.nextInt(attainableCells.size());
+                        targetCell = attainableCells.get(randomIndex);
 
                         // Check if targetCell is empty, otherwise invalid move
                         if (targetCell.getEntity().getType() == EntityType.EMPTY) {
@@ -153,15 +155,95 @@ public class Map {
                             targetCell.setEntity(currentCell.getEntity());
                             currentCell.setEntity(new Empty());
 
+                            currentEntity.decreaseEnergyPoints();
                             validMove = true;
+                        } else {
+                            attainableCells.remove(randomIndex);
                         }
 
                     } while(!validMove); // Loop while move is invalid
 
-                    // TODO check around for fight
+                    // Check for people around
+                    for (Cell aroundCell: getAttainableCellsAround(targetCell)) {
+
+                        // check if aroundCell has a HumanBeing inside to meet
+                        if (aroundCell.getEntity() instanceof HumanBeing aroundEntity) {
+                            currentEntity.meet(aroundEntity);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Return cells around currentCell attainable by its entity
+     * @param currentCell cell to look around
+     * @return a list of cells
+     */
+    public ArrayList<Cell> getAttainableCellsAround(Cell currentCell) {
+        return getAttainableCellsAround(currentCell, new ArrayList<>(List.of(Direction.values())));
+    }
+
+    /**
+     * Return cells around currentCell attainable by its entity, considering forwardDirections
+     * @param currentCell cell to look around
+     * @param availableDirections allowed directions to move
+     * @return a list of cells
+     */
+    public ArrayList<Cell> getAttainableCellsAround(Cell currentCell, ArrayList<Direction> availableDirections) {
+        ArrayList<Cell> cellsAround = new ArrayList<>();
+
+        for (Direction direction: availableDirections) {
+            int targetX, targetY;
+            // get targetX, targetY
+            switch (direction) {
+                case NW -> {
+                    targetX = currentCell.getX() - 1;
+                    targetY = currentCell.getY() - 1;
+                }
+                case N -> {
+                    targetX = currentCell.getX();
+                    targetY = currentCell.getY() - 1;
+                }
+                case NE -> {
+                    targetX = currentCell.getX() + 1;
+                    targetY = currentCell.getY() - 1;
+                }
+                case E -> {
+                    targetX = currentCell.getX() + 1;
+                    targetY = currentCell.getY();
+                }
+                case SE -> {
+                    targetX = currentCell.getX() + 1;
+                    targetY = currentCell.getY() + 1;
+                }
+                case S -> {
+                    targetX = currentCell.getX();
+                    targetY = currentCell.getY() + 1;
+                }
+                case SW -> {
+                    targetX = currentCell.getX() - 1;
+                    targetY = currentCell.getY() + 1;
+                }
+                case W -> {
+                    targetX = currentCell.getX() - 1;
+                    targetY = currentCell.getY();
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + direction);
+            }
+
+            // check if cell exist in the map
+            if (0 <= targetX && targetX < columns && 0 <= targetY && targetY < rows) {
+                Cell targetCell = cells[targetX][targetY];
+
+                // check if cell type is neutral or the same as the currentCell
+                if (targetCell.getType() == CellType.NEUTRAL || targetCell.getType() == currentCell.getType()) {
+                    cellsAround.add(targetCell);
+                }
+            }
+        }
+        return cellsAround;
     }
 
     /* ----- MAP PRINT ----- */
@@ -220,10 +302,5 @@ public class Map {
                 }
             }
         }
-    }
-
-    private void printSeparatorLigne() {
-        // add a ligne separator
-        System.out.println("." + "   .".repeat(columns));
     }
 }
