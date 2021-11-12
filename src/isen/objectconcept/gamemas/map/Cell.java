@@ -36,6 +36,15 @@ public class Cell {
         this.entity = entity;
     }
 
+    /**
+     * Move this cell's entity to targetCell
+     * @param targetCell to move entity to
+     */
+    public void moveEntityTo(Cell targetCell) {
+        targetCell.setEntity(entity);
+        entity = new Empty();
+    }
+
     @Override
     public String toString() {
         return "Cell{" +

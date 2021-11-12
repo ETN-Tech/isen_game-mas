@@ -137,21 +137,21 @@ public class Map {
         // Loop through cells
         for (Cell[] cellsx: cells) {
             for (Cell currentCell: cellsx) {
-                System.out.println("CurrentCell: "+ currentCell);
+                //System.out.println("CurrentCell: "+ currentCell);
 
                 // Check if cell contains a HumanBeing that is not a Master
                 if (currentCell.getEntity() instanceof HumanBeing currentEntity && !(currentEntity instanceof Master)) {
-                    System.out.println("CurrentEntity: "+ currentEntity);
+                    //System.out.println("CurrentEntity: "+ currentEntity);
                     boolean validMove = false;
 
                     ArrayList<Direction> availableDirections = new ArrayList<>();
 
                     // check energyPoints and baseMessage, decide to go forward or backward
                     if (currentEntity.getEnergyPoints() > 10 || currentEntity.getBaseMessage() == null) {
-                        System.out.println("Go forward");
+                        //System.out.println("Go forward");
                         availableDirections.addAll(currentEntity.getForwardDirections());
                     } else {
-                        System.out.println("Go backward");
+                        //System.out.println("Go backward");
                         availableDirections.addAll(currentEntity.getBackwardDirections());
                     }
 
@@ -160,33 +160,38 @@ public class Map {
 
                     // Find an empty cell to move to
                     do {
-                        System.out.println("AttainableCells: "+ attainableCells);
+                        //System.out.println("AttainableCells: "+ attainableCells);
 
-                        int randomIndex = random.nextInt(attainableCells.size());
-                        targetCell = attainableCells.get(randomIndex);
+                        // check if entity can move around
+                        if (attainableCells.size() > 0) {
+                            int randomIndex = random.nextInt(attainableCells.size());
+                            targetCell = attainableCells.get(randomIndex);
 
-                        // Check if targetCell is empty, otherwise invalid move
-                        if (targetCell.getEntity().getType() == EntityType.EMPTY) {
-                            // move entity to targetCell
-                            targetCell.setEntity(currentCell.getEntity());
-                            currentCell.setEntity(new Empty());
+                            // Check if targetCell is empty, otherwise invalid move
+                            if (targetCell.getEntity().getType() == EntityType.EMPTY) {
+                                // move entity to targetCell
+                                currentCell.moveEntityTo(targetCell);
+                                currentEntity.decreaseEnergyPoints();
 
-                            currentEntity.decreaseEnergyPoints();
-                            validMove = true;
+                                // Check for people around
+                                for (Cell aroundCell: getAttainableCellsAround(targetCell)) {
+                                    // check if aroundCell has a HumanBeing inside to meet
+                                    if (aroundCell.getEntity() instanceof HumanBeing aroundEntity) {
+                                        currentEntity.meet(aroundEntity);
+                                    }
+                                }
+
+                                validMove = true;
+                            } else {
+                                attainableCells.remove(randomIndex);
+                            }
                         } else {
-                            attainableCells.remove(randomIndex);
+                            System.out.println("Entity can't move. Process next cell");
+                            // entity can't move, process next cell
+                            validMove = true;
                         }
 
                     } while(!validMove); // Loop while move is invalid
-
-                    // Check for people around
-                    for (Cell aroundCell: getAttainableCellsAround(targetCell)) {
-
-                        // check if aroundCell has a HumanBeing inside to meet
-                        if (aroundCell.getEntity() instanceof HumanBeing aroundEntity) {
-                            currentEntity.meet(aroundEntity);
-                        }
-                    }
                 }
             }
         }
@@ -278,10 +283,13 @@ public class Map {
                 }
             }
         }
-        System.out.println("Winning teams:");
-        System.out.println(winnerTeams);
 
-        return (winnerTeams.size() > 0);
+        if (winnerTeams.size() > 0) {
+            System.out.println("Winning teams:");
+            System.out.println(winnerTeams);
+            return true;
+        }
+        return false;
     }
 
     /* ----- MAP PRINT ----- */

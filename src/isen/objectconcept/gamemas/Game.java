@@ -9,7 +9,7 @@ public class Game {
     static boolean gameRunning = true;
     private static final int maxTurns = 20;
     private int currentTurn = 0;
-    private static final int maxEnergyPoints = 4;
+    private static final int maxEnergyPoints = 20;
 
     public Game() {
     }
@@ -27,7 +27,11 @@ public class Game {
             playTurn();
         }
 
-        System.out.println();
+        if (currentTurn >= maxTurns) {
+            System.out.println("Max number of turn reached. End of Game, no winner.");
+        }
+
+        System.out.println("\nGAME OVER\n");
     }
 
     /**
@@ -40,7 +44,7 @@ public class Game {
         map.moveEntities();
         map.print();
 
-        gameRunning = map.checkGameOver();
+        gameRunning = !map.checkGameOver();
     }
 
     /* ----- GETTERS ----- */
