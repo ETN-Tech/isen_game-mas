@@ -20,7 +20,7 @@ public class Map {
 
     private final Random random = new Random();
     // Probability in percentage that a neutral cell contains an obstacle at game initialization
-    private static final int obstacleProba = 10;
+    private static final int obstacleProba = 5;
     private static final int numberCreaturesPerRace = 4;
 
     private static final int columns = 10;
@@ -88,7 +88,7 @@ public class Map {
         cells[0][columns - 1].setEntity(new MasterOrc());
 
         // init creatures
-        for (int i = 0; i < numberCreaturesPerRace; i++) {
+        for (int i = 0; i < numberCreaturesPerRace - 1; i++) {
             pickRandomEmptyCell(0, safeZoneRows, 0, safeZoneColumns)
                     .setEntity(new Elf("E"+ (i + 1)));
             pickRandomEmptyCell(0, safeZoneRows, columns - safeZoneColumns, columns)

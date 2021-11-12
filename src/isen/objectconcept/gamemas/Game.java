@@ -8,7 +8,7 @@ public class Game {
 
     static boolean gameRunning = true;
     private int currentTurn = 0;
-    private static final int maxTurns = 100;
+    private static final int maxTurns = 1000;
     public static final int winMessagesNumber = 10;
     private static final int maxEnergyPoints = 20;
 

@@ -107,10 +107,18 @@ public abstract class HumanBeing extends Entity {
     public void fightWith(HumanBeing enemy) {
         if (random.nextBoolean()) {
             // enemy lose baseMessage
-            messages.add(enemy.loseBaseMessage());
+            Message enemyBaseMessage = enemy.loseBaseMessage();
+
+            if (enemyBaseMessage != null ) {
+                messages.add(enemyBaseMessage);
+            }
         } else {
             // this loses baseMessage
-            enemy.addMessage(loseBaseMessage());
+            Message thisBaseMessage = loseBaseMessage();
+
+            if (thisBaseMessage != null) {
+                enemy.addMessage(thisBaseMessage);
+            }
         }
     }
 
