@@ -14,8 +14,11 @@ public class Game {
     public Game() {
     }
 
+    /**
+     * Start the game
+     */
     public void start() {
-        System.out.println("Game started");
+        System.out.println("\n> GAME STARTED\n");
 
 
         // Looping through steps
@@ -27,12 +30,17 @@ public class Game {
         System.out.println();
     }
 
+    /**
+     * Play a game turn
+     */
     private void playTurn() {
         // increase turns
         currentTurn++;
 
         map.moveEntities();
         map.print();
+
+        gameRunning = map.checkGameOver();
     }
 
     /* ----- GETTERS ----- */

@@ -98,6 +98,10 @@ public abstract class HumanBeing extends Entity {
         }
     }
 
+    /**
+     * Fight with an enemy
+     * @param enemy to fight with
+     */
     public void fightWith(HumanBeing enemy) {
         if (random.nextBoolean()) {
             // enemy lose baseMessage
@@ -108,17 +112,30 @@ public abstract class HumanBeing extends Entity {
         }
     }
 
+    /**
+     * Exchange a message with an ally
+     * @param ally to exchange message with
+     */
     public void exchangeMessageWith(HumanBeing ally) {
         int msgSize = messages.size();
         if (msgSize > 0) {
             // share a message with ally
             ally.addMessage(messages.get(random.nextInt(msgSize)));
+
+            if (ally instanceof Master masterAlly) {
+                // check GameOver
+            }
         }
 
         msgSize = ally.getMessages().size();
         if (msgSize > 0) {
-            // ally share message with this
-            messages.add(ally.getMessages().get(random.nextInt(msgSize)));
+            if (ally instanceof Master masterAlly && baseMessage == null) {
+                // regenerate baseMessage
+                baseMessage = masterAlly.generateMessage();
+            } else {
+                // ally share message with this
+                messages.add(ally.getMessages().get(random.nextInt(msgSize)));
+            }
         }
     }
 
@@ -127,6 +144,7 @@ public abstract class HumanBeing extends Entity {
     public void addMessage(Message message) {
         messages.add(message);
     }
+
     public void addMessages(ArrayList<Message> messages) {
         this.messages.addAll(messages);
     }

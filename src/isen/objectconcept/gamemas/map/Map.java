@@ -11,6 +11,7 @@ import isen.objectconcept.gamemas.enums.CellType;
 import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,6 +22,7 @@ public class Map {
     // Probability in percentage that a neutral cell contains an obstacle at game initialization
     private static final int obstacleProba = 10;
     private static final int numberCreaturesPerRace = 4;
+    private static final int winMessagesNumber = 10;
 
     private static final int columns = 10;
     private static final int rows = 10;
@@ -100,6 +102,14 @@ public class Map {
 
     }
 
+    /**
+     * Pick a random empty Cell in the specified area
+     * @param rowStart area y start
+     * @param rowEnd area y end
+     * @param columnStart area x start
+     * @param columnEnd area x end
+     * @return a random Cell
+     */
     private Cell pickRandomEmptyCell(int rowStart, int rowEnd, int columnStart, int columnEnd) {
         ArrayList<Cell> emptyCells = new ArrayList<>();
 
@@ -127,18 +137,21 @@ public class Map {
         // Loop through cells
         for (Cell[] cellsx: cells) {
             for (Cell currentCell: cellsx) {
+                System.out.println("CurrentCell: "+ currentCell);
 
                 // Check if cell contains a HumanBeing that is not a Master
                 if (currentCell.getEntity() instanceof HumanBeing currentEntity && !(currentEntity instanceof Master)) {
-                    System.out.println(currentEntity);
+                    System.out.println("CurrentEntity: "+ currentEntity);
                     boolean validMove = false;
 
                     ArrayList<Direction> availableDirections = new ArrayList<>();
 
                     // check energyPoints and baseMessage, decide to go forward or backward
                     if (currentEntity.getEnergyPoints() > 10 || currentEntity.getBaseMessage() == null) {
+                        System.out.println("Go forward");
                         availableDirections.addAll(currentEntity.getForwardDirections());
                     } else {
+                        System.out.println("Go backward");
                         availableDirections.addAll(currentEntity.getBackwardDirections());
                     }
 
@@ -147,8 +160,8 @@ public class Map {
 
                     // Find an empty cell to move to
                     do {
-                        System.out.println(attainableCells);
-                        System.out.println(attainableCells.size());
+                        System.out.println("AttainableCells: "+ attainableCells);
+
                         int randomIndex = random.nextInt(attainableCells.size());
                         targetCell = attainableCells.get(randomIndex);
 
@@ -177,10 +190,6 @@ public class Map {
                 }
             }
         }
-    }
-
-    public void checkGameOver() {
-
     }
 
     /**
@@ -251,6 +260,28 @@ public class Map {
             }
         }
         return cellsAround;
+    }
+
+    /**
+     * Check if game is over
+     */
+    public boolean checkGameOver() {
+        ArrayList<EntityType> winnerTeams = new ArrayList<>();
+
+        for (Cell[] cellsx: cells) {
+            for (Cell cell: cellsx) {
+                if (cell.getEntity() instanceof HumanBeing entity) {
+                    // check if team won, add to winner list
+                    if (entity instanceof Master && entity.getMessages().size() >= winMessagesNumber) {
+                        winnerTeams.add(entity.getType());
+                    }
+                }
+            }
+        }
+        System.out.println("Winning teams:");
+        System.out.println(winnerTeams);
+
+        return (winnerTeams.size() > 0);
     }
 
     /* ----- MAP PRINT ----- */

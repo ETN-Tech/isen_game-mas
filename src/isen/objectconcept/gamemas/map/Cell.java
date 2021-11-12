@@ -42,7 +42,7 @@ public class Cell {
                 "x=" + x +
                 ", y=" + y +
                 ", type=" + type +
-                ", entity=" + entity +
+                ", entity=" + entity.getFigure() +
                 '}';
     }
 }
