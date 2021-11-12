@@ -65,11 +65,20 @@ public abstract class HumanBeing extends Entity {
         EntityType ally;
 
         switch (type) {
-            case ELF -> ally = EntityType.HUMAN;
-            case GOBLIN -> ally = EntityType.ORC;
-            case HUMAN -> ally = EntityType.ELF;
-            case ORC -> ally = EntityType.GOBLIN;
-            default -> throw new IllegalStateException("Unexpected value: " + type);
+            case ELF :
+                ally = EntityType.HUMAN;
+                break;
+            case GOBLIN :
+                ally = EntityType.ORC;
+                break;
+            case HUMAN :
+                ally = EntityType.ELF;
+                break;
+            case ORC :
+                ally = EntityType.GOBLIN;
+                break;
+            default :
+                throw new IllegalStateException("Unexpected value: " + type);
         }
 
         // check if ally

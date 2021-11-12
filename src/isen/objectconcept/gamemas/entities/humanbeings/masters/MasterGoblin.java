@@ -5,8 +5,15 @@ import isen.objectconcept.gamemas.messages.MessageGoblin;
 
 public class MasterGoblin extends Goblin implements Master {
 
-    public MasterGoblin() {
-        super("GM");
+    private static MasterGoblin masterGoblin;
+    private MasterGoblin(){
+        super("GM");    }
+
+    public static MasterGoblin getInstance(){
+        if(masterGoblin==null){
+            masterGoblin = new MasterGoblin();
+        }
+        return masterGoblin;
     }
 
     @Override

@@ -5,8 +5,17 @@ import isen.objectconcept.gamemas.messages.MessageOrc;
 
 public class MasterOrc extends Orc implements Master {
 
-    public MasterOrc() {
+
+    private static MasterOrc masterOrc;
+    private MasterOrc(){
         super("OM");
+    }
+
+    public static MasterOrc getInstance(){
+        if(masterOrc==null){
+            masterOrc = new MasterOrc();
+        }
+        return masterOrc;
     }
 
     @Override

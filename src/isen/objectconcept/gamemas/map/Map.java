@@ -1,12 +1,7 @@
 package isen.objectconcept.gamemas.map;
 
-import isen.objectconcept.gamemas.Game;
-import isen.objectconcept.gamemas.entities.humanbeings.HumanBeing;
-import isen.objectconcept.gamemas.entities.*;
-import isen.objectconcept.gamemas.entities.humanbeings.Elf;
-import isen.objectconcept.gamemas.entities.humanbeings.Goblin;
-import isen.objectconcept.gamemas.entities.humanbeings.Human;
-import isen.objectconcept.gamemas.entities.humanbeings.Orc;
+import isen.objectconcept.gamemas.entities.Obstacle;
+import isen.objectconcept.gamemas.entities.humanbeings.*;
 import isen.objectconcept.gamemas.entities.humanbeings.masters.*;
 import isen.objectconcept.gamemas.enums.CellType;
 import isen.objectconcept.gamemas.enums.Direction;
@@ -82,10 +77,10 @@ public class Map {
 
     private void initCreatures() {
         // init masters
-        cells[0][0].setEntity(new MasterElf());
-        cells[rows - 1][0].setEntity(new MasterGoblin());
-        cells[rows - 1][columns - 1].setEntity(new MasterHuman());
-        cells[0][columns - 1].setEntity(new MasterOrc());
+        cells[0][0].setEntity(MasterElf.getInstance());
+        cells[rows - 1][0].setEntity(MasterGoblin.getInstance());
+        cells[rows - 1][columns - 1].setEntity(MasterHuman.getInstance());
+        cells[0][columns - 1].setEntity(MasterOrc.getInstance());
 
         // init creatures
         for (int i = 0; i < numberCreaturesPerRace - 1; i++) {
@@ -278,14 +273,39 @@ public class Map {
                 Cell cell = cells[x][y];
 
                 strMap.append(" ").append(cell.getEntity().getFigure()).append(" |");
+                    switch (cell.getEntity().getType()) {
+                        case HUMAN:
+                            System.out.print("\u001B[34m " + cell.getEntity().getFigure() + " ");
+                            break;
+                        case ORC:
+                            System.out.print("\u001B[35m " + cell.getEntity().getFigure() + " ");
+                            break;
+                        case ELF:
+                            System.out.print("\u001B[32m " + cell.getEntity().getFigure() + " ");
+                            break;
+                        case GOBLIN:
+                            System.out.print("\u001B[33m " + cell.getEntity().getFigure() + " ");
+                            break;
+                        case OBSTACLE:
+                            System.out.print("\u001B[31m " + " + ");
+                            break;
+                        case EMPTY:
+                            System.out.print("  . ");
+                            break;
+                    }
+                    System.out.print("\u001B[0m");
+
+
 
                 // if end of map (width), print line
                 if (cell.getX() == columns - 1) {
-                    System.out.println(strMap);
+//                    System.out.println(strMap);
 
                     strMap = new StringBuilder("|");
                 }
             }
+            System.out.println();
+
         }
     }
 

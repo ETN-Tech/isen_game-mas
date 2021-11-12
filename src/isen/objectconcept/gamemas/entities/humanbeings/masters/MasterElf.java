@@ -5,8 +5,17 @@ import isen.objectconcept.gamemas.messages.MessageElf;
 
 public class MasterElf extends Elf implements Master {
 
-    public MasterElf() {
+
+    private static MasterElf masterElf;
+    private MasterElf(){
         super("EM");
+    }
+
+    public static MasterElf getInstance(){
+        if(masterElf==null){
+            masterElf = new MasterElf();
+        }
+        return masterElf;
     }
 
     @Override
