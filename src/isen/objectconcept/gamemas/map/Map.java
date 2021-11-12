@@ -1,5 +1,6 @@
 package isen.objectconcept.gamemas.map;
 
+import isen.objectconcept.gamemas.Game;
 import isen.objectconcept.gamemas.entities.humanbeings.HumanBeing;
 import isen.objectconcept.gamemas.entities.*;
 import isen.objectconcept.gamemas.entities.humanbeings.Elf;
@@ -11,7 +12,6 @@ import isen.objectconcept.gamemas.enums.CellType;
 import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,7 +22,6 @@ public class Map {
     // Probability in percentage that a neutral cell contains an obstacle at game initialization
     private static final int obstacleProba = 10;
     private static final int numberCreaturesPerRace = 4;
-    private static final int winMessagesNumber = 10;
 
     private static final int columns = 10;
     private static final int rows = 10;
@@ -265,31 +264,6 @@ public class Map {
             }
         }
         return cellsAround;
-    }
-
-    /**
-     * Check if game is over
-     */
-    public boolean checkGameOver() {
-        ArrayList<EntityType> winnerTeams = new ArrayList<>();
-
-        for (Cell[] cellsx: cells) {
-            for (Cell cell: cellsx) {
-                if (cell.getEntity() instanceof HumanBeing entity) {
-                    // check if team won, add to winner list
-                    if (entity instanceof Master && entity.getMessages().size() >= winMessagesNumber) {
-                        winnerTeams.add(entity.getType());
-                    }
-                }
-            }
-        }
-
-        if (winnerTeams.size() > 0) {
-            System.out.println("Winning teams:");
-            System.out.println(winnerTeams);
-            return true;
-        }
-        return false;
     }
 
     /* ----- MAP PRINT ----- */

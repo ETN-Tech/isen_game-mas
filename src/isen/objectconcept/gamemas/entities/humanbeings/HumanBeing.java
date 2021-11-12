@@ -87,9 +87,11 @@ public abstract class HumanBeing extends Entity {
             baseMessage = masterEntity.generateMessage();
 
             // check victory
-            if (otherEntity.getMessages().size() > 10) {
+            if (otherEntity.getMessages().size() > Game.winMessagesNumber) {
+                System.out.println(otherEntity);
                 // VICTORY
-                Game.setGameOver(otherEntity.getType() + " has won!");
+                Game.setGameOver();
+                System.out.println(otherEntity.getType() + " has won!");
             }
         }
         else {
@@ -121,21 +123,12 @@ public abstract class HumanBeing extends Entity {
         if (msgSize > 0) {
             // share a message with ally
             ally.addMessage(messages.get(random.nextInt(msgSize)));
-
-            if (ally instanceof Master masterAlly) {
-                // check GameOver
-            }
         }
 
         msgSize = ally.getMessages().size();
         if (msgSize > 0) {
-            if (ally instanceof Master masterAlly && baseMessage == null) {
-                // regenerate baseMessage
-                baseMessage = masterAlly.generateMessage();
-            } else {
-                // ally share message with this
-                messages.add(ally.getMessages().get(random.nextInt(msgSize)));
-            }
+            // ally share message with this
+            messages.add(ally.getMessages().get(random.nextInt(msgSize)));
         }
     }
 

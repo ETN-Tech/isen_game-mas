@@ -7,8 +7,9 @@ public class Game {
     private final Map map = new Map();
 
     static boolean gameRunning = true;
-    private static final int maxTurns = 20;
     private int currentTurn = 0;
+    private static final int maxTurns = 100;
+    public static final int winMessagesNumber = 10;
     private static final int maxEnergyPoints = 20;
 
     public Game() {
@@ -43,8 +44,6 @@ public class Game {
 
         map.moveEntities();
         map.print();
-
-        gameRunning = !map.checkGameOver();
     }
 
     /* ----- GETTERS ----- */
@@ -56,8 +55,7 @@ public class Game {
         return maxEnergyPoints;
     }
 
-    public static void setGameOver(String message) {
+    public static void setGameOver() {
         gameRunning = false;
-        System.out.println(message);
     }
 }
