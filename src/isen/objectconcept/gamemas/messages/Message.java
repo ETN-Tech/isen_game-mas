@@ -11,4 +11,12 @@ public abstract class Message {
         this.message = message;
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "message='" + message + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }
