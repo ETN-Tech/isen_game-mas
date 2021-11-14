@@ -4,6 +4,7 @@ import isen.objectconcept.gamemas.entities.humanbeings.HumanBeing;
 import isen.objectconcept.gamemas.entities.humanbeings.masters.Master;
 import isen.objectconcept.gamemas.enums.CellType;
 import isen.objectconcept.gamemas.enums.Direction;
+import isen.objectconcept.gamemas.enums.EntityType;
 import isen.objectconcept.gamemas.map.Cell;
 import isen.objectconcept.gamemas.map.Map;
 
@@ -15,11 +16,14 @@ public class Game {
     private final Random random = new Random();
     private final Map map = new Map();
 
-    static boolean gameRunning = true;
+    private static boolean gameRunning = true;
+    private static EntityType winnerTeam;
+
     private int currentTurn = 0;
-    private static final int maxTurns = 1000;
+    private static final int maxTurns = 100;
     public static final int winMessagesNumber = 10;
-    private static final int maxEnergyPoints = 20;
+    public static final int maxEnergyPoints = 20;
+
 
     public Game() {
     }
@@ -38,10 +42,12 @@ public class Game {
         }
 
         if (currentTurn >= maxTurns) {
-            System.out.println("Max number of turn reached. End of Game, no winner.");
+            System.out.println("\nMax number of turn reached. End of Game, no winner.");
+        } else {
+            System.out.println("\n***** "+ winnerTeam + " team won the Game! *****");
         }
 
-        System.out.println("\nGAME OVER\n");
+        System.out.println("\n> GAME IS OVER\n");
     }
 
     /**
@@ -60,16 +66,24 @@ public class Game {
      * Move all entities in the Map and make them meet people around
      */
     public void moveEntities() {
+        boolean validMove;
+
+        ArrayList<Direction> availableDirections;
+        ArrayList<Cell> attainableCells;
+
+        Cell targetCell;
+        int randomIndex;
 
         // Loop through cells
         for (HumanBeing humanBeing: map.getHumanBeings()) {
+            System.out.println("# "+ humanBeing.getFigure() +"'s turn");
 
             // Check if HumanBeing is not a Master
             if (!(humanBeing instanceof Master)) {
                 //System.out.println("humanBeing: "+ humanBeing);
-                boolean validMove = false;
+                validMove = false;
 
-                ArrayList<Direction> availableDirections = new ArrayList<>();
+                availableDirections = new ArrayList<>();
 
                 // check energyPoints and baseMessage, decide to go forward or backward
                 if (humanBeing.getEnergyPoints() > 10 || humanBeing.getBaseMessage() == null) {
@@ -80,8 +94,7 @@ public class Game {
                     availableDirections.addAll(humanBeing.getBackwardDirections());
                 }
 
-                ArrayList<Cell> attainableCells = getAttainableCellsAround(humanBeing, availableDirections);
-                Cell targetCell;
+                attainableCells = getAttainableCellsAround(humanBeing, availableDirections);
 
                 // Find an empty cell to move to
                 do {
@@ -89,21 +102,22 @@ public class Game {
 
                     // check if entity can move around
                     if (attainableCells.size() > 0) {
-                        int randomIndex = random.nextInt(attainableCells.size());
+                        randomIndex = random.nextInt(attainableCells.size());
                         targetCell = attainableCells.get(randomIndex);
 
                         // Check if targetCell is empty, otherwise invalid move
                         if (map.getEntityInCell(targetCell) == null) {
                             // move entity to targetCell
                             humanBeing.moveTo(targetCell.getX(), targetCell.getY());
+                            System.out.println("  "+ humanBeing.getFigure() +" move to "+ humanBeing.getPosition());
                             humanBeing.decreaseEnergyPoints();
 
                             // Check for people around
-                            System.out.println("AttainableHBs: "+ getAttainableHumanBeingAround(humanBeing));
+                            //System.out.println("AttainableHBs: "+ getAttainableHumanBeingAround(humanBeing));
                             for (HumanBeing aroundHumanBeing: getAttainableHumanBeingAround(humanBeing)) {
 
-                                System.out.println(humanBeing.getFigure() +" meet "+ aroundHumanBeing.getFigure());
-                                System.out.println(humanBeing.getPosition() +" meet "+ aroundHumanBeing.getPosition());
+                                System.out.print("@ "+ humanBeing.getFigure() +" meet "+ aroundHumanBeing.getFigure() +" - ");
+                                //System.out.println(humanBeing.getPosition() +" meet "+ aroundHumanBeing.getPosition());
                                 // Do MEET actions
                                 humanBeing.meet(aroundHumanBeing);
                             }
@@ -132,19 +146,21 @@ public class Game {
 
         int x = humanBeing.getX();
         int y = humanBeing.getY();
-        System.out.println(humanBeing.getFigure());
-        System.out.println(humanBeing.getPosition());
+        //System.out.println("#"+ humanBeing.getFigure() +" ("+ humanBeing.getPosition() +")");
 
+        int selectedX, selectedY;
         // check every humanBeing from the game
         for (HumanBeing selectedHumanBeing: map.getHumanBeings()) {
-            int selectedX = humanBeing.getX();
-            int selectedY = humanBeing.getY();
+            // verify not himself
+            if (selectedHumanBeing != humanBeing) {
+                selectedX = selectedHumanBeing.getX();
+                selectedY = selectedHumanBeing.getY();
 
-            // check if selectedHumanBeing is attainable
-            if (x - 1 <= selectedX && selectedX <= x + 1 && y - 1 <= selectedY && selectedY <= y + 1) {
-                humanBeingsAround.add(selectedHumanBeing);
-                System.out.println(selectedHumanBeing.getFigure() + " is around");
-                System.out.println(selectedHumanBeing.getPosition());
+                // check if selectedHumanBeing is attainable
+                if (x - 1 <= selectedX && selectedX <= x + 1 && y - 1 <= selectedY && selectedY <= y + 1) {
+                    humanBeingsAround.add(selectedHumanBeing);
+                    //System.out.println(selectedHumanBeing.getFigure() +"("+ selectedHumanBeing.getPosition() +") is around "+ humanBeing.getFigure());
+                }
             }
         }
         return humanBeingsAround;
@@ -212,15 +228,8 @@ public class Game {
     }
 
     /* ----- GETTERS ----- */
-    public Map getMap() {
-        return map;
-    }
-
-    public static int getMaxEnergyPoints() {
-        return maxEnergyPoints;
-    }
-
-    public static void setGameOver() {
+    public static void setGameOver(EntityType entityType) {
         gameRunning = false;
+        winnerTeam = entityType;
     }
 }

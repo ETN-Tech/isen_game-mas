@@ -18,7 +18,7 @@ public abstract class HumanBeing extends Entity {
     protected ArrayList<Direction> backwardDirections = new ArrayList<>();
     protected ArrayList<Message> messages = new ArrayList<>();
     protected Message baseMessage;
-    protected int energyPoints = Game.getMaxEnergyPoints();
+    protected int energyPoints = Game.maxEnergyPoints;
 
     protected HumanBeing(int x, int y, EntityType type, String figure, ArrayList<Direction> backwardDirections, Message baseMessage) {
         super(x, y, type, figure);
@@ -72,30 +72,36 @@ public abstract class HumanBeing extends Entity {
 
         // check if ally
         if (otherEntity.getType() == ally) {
-            System.out.println(otherEntity.getFigure() +" is an ally.");
+            System.out.println(otherEntity.getFigure() +" is an ally!");
             // ally, exchange message
             exchangeMessageWith(otherEntity);
         }
-        // check if same type and Master
-        else if (otherEntity.getType() == type && otherEntity instanceof Master masterEntity) {
-            System.out.println(otherEntity.getFigure() +" is my master.");
-            // give messages to master
-            otherEntity.addMessages(messages);
+        // check if same type
+        else if (otherEntity.getType() == type) {
+            // check if master
+            if (otherEntity instanceof Master masterEntity) {
+                System.out.println(otherEntity.getFigure() +" is my master!");
+                // give messages to master
+                otherEntity.addMessages(messages);
 
-            // reset messages
-            messages.removeAll(messages);
-            baseMessage = masterEntity.generateMessage();
+                // reset messages
+                messages.removeAll(messages);
+                baseMessage = masterEntity.generateMessage();
+                // reset energy
+                energyPoints = Game.maxEnergyPoints;
 
-            // check victory
-            if (otherEntity.getMessages().size() > Game.winMessagesNumber) {
-                System.out.println(otherEntity);
-                // VICTORY
-                Game.setGameOver();
-                System.out.println(otherEntity.getType() + " has won!");
+                // check victory
+                if (otherEntity.getMessages().size() > Game.winMessagesNumber) {
+                    // VICTORY
+                    Game.setGameOver(type);
+                    System.out.println("> "+ otherEntity.getType() + " has won!");
+                }
+            } else {
+                System.out.println(otherEntity.getFigure() +" is in my team!");
             }
         }
         else {
-            System.out.println(otherEntity.getFigure() +" is an enemy.");
+            System.out.println(otherEntity.getFigure() +" is an enemy!");
             // enemy, fight
             fightWith(otherEntity);
         }
@@ -157,10 +163,6 @@ public abstract class HumanBeing extends Entity {
         baseMessage = null;
 
         return saveBaseMessage;
-    }
-
-    public String getPosition() {
-        return "x=" + x + ", y=" + y;
     }
 
     @Override

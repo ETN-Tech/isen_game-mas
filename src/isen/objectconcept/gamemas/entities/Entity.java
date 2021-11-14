@@ -23,6 +23,10 @@ public abstract class Entity {
         return y;
     }
 
+    public String getPosition() {
+        return "x=" + x + ", y=" + y;
+    }
+
     public EntityType getType() {
         return type;
     }

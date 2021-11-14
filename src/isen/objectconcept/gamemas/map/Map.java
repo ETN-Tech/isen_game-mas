@@ -5,7 +5,6 @@ import isen.objectconcept.gamemas.entities.Obstacle;
 import isen.objectconcept.gamemas.entities.humanbeings.*;
 import isen.objectconcept.gamemas.entities.humanbeings.masters.*;
 import isen.objectconcept.gamemas.enums.CellType;
-import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 
 import java.util.ArrayList;
