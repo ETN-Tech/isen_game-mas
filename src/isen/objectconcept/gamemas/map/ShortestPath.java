@@ -49,7 +49,7 @@ public class ShortestPath {
         int[][] binary = toBinary(matrix);
         binary[sx][sy] = 1;
 
-        //if start or end value is 0, return
+        //if Destination is 0(not empty), return
         if ( binary[dx][dy] == 0) {
             System.out.println("There is no path back home.");
             return null;
@@ -65,6 +65,7 @@ public class ShortestPath {
                 }
             }
         }
+
         //breadth first search
         LinkedList<SafeCell> queue = new LinkedList<>();
         SafeCell src = cells[sx][sy];
@@ -111,7 +112,8 @@ public class ShortestPath {
             System.out.println(path);
             SafeCell stop;
             int num_of_steps;
-            //Move 2 STEPS
+
+            //Move 2 Steps
             if(path.size() >= 3){
                 //index 0 is same as start point
                 stop = path.get(2);

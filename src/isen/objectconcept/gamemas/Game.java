@@ -1,7 +1,6 @@
 package isen.objectconcept.gamemas;
 
 import isen.objectconcept.gamemas.entities.humanbeings.HumanBeing;
-import isen.objectconcept.gamemas.entities.humanbeings.masters.Master;
 import isen.objectconcept.gamemas.map.Map;
 
 public class Game {
@@ -9,7 +8,6 @@ public class Game {
     private final Map map = new Map();
 
     static boolean gameRunning = true;
-    private int currentTurn = 0;
     public static final int winMessagesNumber = 4;
     private static final int maxEnergyPoints = 20;
 
@@ -37,16 +35,6 @@ public class Game {
         System.out.println("\nGAME OVER\n");
     }
 
-    /**
-     * Play a game turn
-     */
-    private void playTurn() {
-        // increase turns
-        currentTurn++;
-
-//        map.moveEntities();
-        map.print();
-    }
 
     /* ----- GETTERS ----- */
     public Map getMap() {

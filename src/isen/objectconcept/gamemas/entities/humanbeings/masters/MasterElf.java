@@ -1,10 +1,8 @@
 package isen.objectconcept.gamemas.entities.humanbeings.masters;
 
-import isen.objectconcept.gamemas.entities.Empty;
 import isen.objectconcept.gamemas.entities.humanbeings.Elf;
 import isen.objectconcept.gamemas.map.Cell;
 import isen.objectconcept.gamemas.map.Map;
-import isen.objectconcept.gamemas.messages.MessageElf;
 
 public class MasterElf extends Elf implements Master {
 

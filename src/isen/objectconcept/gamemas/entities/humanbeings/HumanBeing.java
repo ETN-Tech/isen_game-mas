@@ -3,9 +3,10 @@ package isen.objectconcept.gamemas.entities.humanbeings;
 import isen.objectconcept.gamemas.Game;
 import isen.objectconcept.gamemas.entities.Empty;
 import isen.objectconcept.gamemas.entities.Entity;
+import isen.objectconcept.gamemas.entities.Obstacle;
 import isen.objectconcept.gamemas.entities.humanbeings.masters.Master;
+import isen.objectconcept.gamemas.enums.Color;
 import isen.objectconcept.gamemas.map.*;
-import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 
 import java.util.ArrayList;
@@ -18,46 +19,29 @@ import static isen.objectconcept.gamemas.enums.EntityType.OBSTACLE;
 public abstract class HumanBeing extends Entity {
 
     private final Random random = new Random();
-
-    protected ArrayList<Direction> forwardDirections = new ArrayList<>();
-    protected ArrayList<Direction> backwardDirections = new ArrayList<>();
     protected ArrayList<String> messages = new ArrayList<>();
-    protected String baseMessage;
     protected int energyPoints = 30;
-    protected int refillPoints = 15;
+    protected int refillPoints = 3;
+    protected int numberOfMessages = 2;
 
     protected Point position;
     protected Point last_position;
     protected boolean moved;
 
-    protected HumanBeing(EntityType type, String figure, ArrayList<Direction> backwardDirections, String baseMessage) {
-        super(type, figure);
-        // generate forwardDirections from backwardDirections
-        for (Direction direction: Direction.values()) {
-            if (direction != backwardDirections.get(1)) {
-                forwardDirections.add(direction);
-            }
+    protected HumanBeing(EntityType type, String figure, String color_code) {
+        super(type, figure, color_code);
+        // Generate initial messages
+        for (int i=1; i <= numberOfMessages; i++){
+            this.messages.add(this.type.toString()+" message "+i);
         }
-        this.backwardDirections.addAll(backwardDirections);
-        this.baseMessage = baseMessage;
-        this.messages.add(baseMessage);
+
     }
 
     /* ---- GETTERS & SETTERS ----- */
-    public ArrayList<Direction> getForwardDirections() {
-        return forwardDirections;
-    }
 
-    public ArrayList<Direction> getBackwardDirections() {
-        return backwardDirections;
-    }
 
     public ArrayList<String> getMessages() {
         return messages;
-    }
-
-    public String getBaseMessage() {
-        return baseMessage;
     }
 
     public int getEnergyPoints() {
@@ -70,6 +54,10 @@ public abstract class HumanBeing extends Entity {
 
     public void decreaseEnergyPoints() {
         energyPoints--;
+    }
+
+    public String getColor_code() {
+        return color_code;
     }
 
     /**
@@ -104,7 +92,7 @@ public abstract class HumanBeing extends Entity {
         // check if same type and Master
         else if (otherEntity.getType() == type && otherEntity instanceof Master masterEntity) {
             // give messages to master
-            System.out.println("Giving messages to master");
+            System.out.println(this.getFigure()+": Giving messages to master");
             if (this.messages.size() > 0 ) {
                 for (String servant_message: this.getMessages()) {
                     if (!otherEntity.getMessages().contains(servant_message)) {
@@ -114,7 +102,6 @@ public abstract class HumanBeing extends Entity {
             }
             // reset messages
             messages.removeAll(messages);
-            baseMessage = masterEntity.generateMessage();
 
 
             // check victory
@@ -122,7 +109,7 @@ public abstract class HumanBeing extends Entity {
                 System.out.println(otherEntity);
                 // VICTORY
                 Game.setGameOver();
-                System.out.println(otherEntity.getType() + "KINGDOM  has won!");
+                System.out.println(otherEntity.getType() + " KINGDOM  has won!");
             }
         }
         else {
@@ -145,6 +132,7 @@ public abstract class HumanBeing extends Entity {
                 }
 //                enemy.messages.remove(0);
             }
+            System.out.println(this.getFigure()+": Fight Status - won");
 
         } else {
             if (messages.size() > 0 ) {
@@ -155,6 +143,7 @@ public abstract class HumanBeing extends Entity {
                 }
 //                messages.remove(0);
             }
+            System.out.println(this.getFigure()+": Fight Status - lost");
         }
     }
 
@@ -169,8 +158,9 @@ public abstract class HumanBeing extends Entity {
             for (String my_message: this.getMessages()) {
                 if (!ally.messages.contains(my_message)) {
                     ally.messages.add(my_message);
-                    return;
                 }
+                break;
+
             }
         }
 
@@ -180,28 +170,17 @@ public abstract class HumanBeing extends Entity {
             for (String ally_message: ally.getMessages()) {
                 if (!messages.contains(ally_message)) {
                     messages.add(ally_message);
-                    break;
                 }
+                break;
             }
         }
+        System.out.println("Messages shared between allies: "+this.getFigure()+" and "+ally.getFigure());
     }
 
 
     /* ----- MESSAGES MANAGEMENT ----- */
     public void addMessage(String message) {
         messages.add(message);
-    }
-
-    public void addMessages(ArrayList<String> messages) {
-        this.messages.addAll(messages);
-    }
-
-    public String loseBaseMessage() {
-        String saveBaseMessage = baseMessage;
-        // remove baseMessage
-        baseMessage = null;
-
-        return saveBaseMessage;
     }
 
     public Point getPosition() {
@@ -225,10 +204,7 @@ public abstract class HumanBeing extends Entity {
         return "HumanBeing{" +
                 "type=" + type +
                 ", figure='" + figure + '\'' +
-                ", forwardDirections=" + forwardDirections +
-                ", backwardDirections=" + backwardDirections +
                 ", messages=" + messages +
-                ", baseMessage=" + baseMessage +
                 ", energyPoints=" + energyPoints +
                 '}';
     }
@@ -241,10 +217,12 @@ public abstract class HumanBeing extends Entity {
      */
     public void move(Map map){
         this.moved = false;
-        if(this.energyPoints > 0 && this.messages.size() == 4){
-            int x = this.getPosition().getX();
-            int y = this.getPosition().getY();
-            Cell[][] cells = map.getCells();
+        Cell[][] cells = map.getCells();
+        int x = this.getPosition().getX();
+        int y = this.getPosition().getY();
+
+        // Go to master if all messages are found
+        if(this.energyPoints > 0 && this.messages.size() == 8){
             Point start = new Point(x,y);
             ShortestPoint stop = findMaster(cells, start);
 
@@ -258,16 +236,19 @@ public abstract class HumanBeing extends Entity {
                 direction( map);
             }
         }
-
+        // if low on energy points, find way back to safezone
         else if(this.energyPoints > 0 && this.energyPoints <= refillPoints){
-            int x = getPosition().getX();
-            int y = getPosition().getY();
-            Cell[][] cells = map.getCells();
             Point start = new Point(x,y);
             ShortestPoint stop = findSafeZone(cells, start);
         }
+        // Turn into an obstacle if energy points is 0
         else if(this.energyPoints == 0){
-            // OBSTACLE CODE
+            Cell current_cell = cells[getPosition().getX()][getPosition().getY()];
+
+            System.out.println("\u001B[31m"+this.getFigure()+": Has Turned into an obstacle");
+            System.out.print("\u001B[0m");
+
+            current_cell.setEntity(new Obstacle());
         }
 
         // Check Interaction only if Entity was moved
@@ -332,6 +313,7 @@ public abstract class HumanBeing extends Entity {
             for (Cell cols: row) {
                 if(cols.getType().toString() == this.getType().toString()){
                     Point end = new Point(cols.getX(), cols.getY());
+                    System.out.println(this.getFigure()+": Shortest path to safezone");
                     ShortestPoint stop = ShortestPath.shortestPath(cells, start, end);
                     if(stop != null){
                         this.setLast_position(getPosition());
@@ -387,7 +369,7 @@ public abstract class HumanBeing extends Entity {
      */
     public ShortestPoint findMaster(Cell[][] cells, Point start){
         Point index = findMasterIndex(cells);
-        System.out.println(this.getFigure()+": Shortest path to "+cells[index.getX()][index.getY()].getEntity().getFigure());
+        System.out.println(this.getFigure()+": Shortest path to Master "+cells[index.getX()][index.getY()].getEntity().getFigure());
 
         int row_limit = cells.length ;
         int column_limit = cells[0].length ;
@@ -434,12 +416,15 @@ public abstract class HumanBeing extends Entity {
         int n = map.getCells()[0].length - 1;
 
         Random random = new Random();
+        // Generate a random number from 0 to 7
         int random_direction = random.nextInt(8);
+        //All 8 directions : E, N, W, S, NE, NW, SE, SW
         Point[] all_directions = { new Point(0,1), new Point(1,0), new Point(0,-1),
                                    new Point(-1,0), new Point(1,1), new Point(1,-1),
                                    new Point(-1,1), new Point(-1,-1)};
         Point direction = all_directions[random_direction];
 
+        // if out of bounds, change direction
         for(int i=0; i < 2; i++){
             if(getPosition().getX() == m && direction.getX() == 1){
                 direction.setX(0);
@@ -454,6 +439,7 @@ public abstract class HumanBeing extends Entity {
                 direction.setY(1);
             }
         }
+
         boolean check_energy_points = this.energyPoints > 0;
         boolean check_empty_cell = map.getCells()[getPosition().getX() + direction.getX()][getPosition().getY() + direction.getY()].getEntity().getType() == EMPTY;
         if(check_empty_cell && check_energy_points ) {

@@ -3,7 +3,6 @@ package isen.objectconcept.gamemas.entities.humanbeings.masters;
 import isen.objectconcept.gamemas.entities.humanbeings.Goblin;
 import isen.objectconcept.gamemas.map.Cell;
 import isen.objectconcept.gamemas.map.Map;
-import isen.objectconcept.gamemas.messages.MessageGoblin;
 
 public class MasterGoblin extends Goblin implements Master {
 

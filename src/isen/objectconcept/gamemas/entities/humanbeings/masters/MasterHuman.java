@@ -3,7 +3,6 @@ package isen.objectconcept.gamemas.entities.humanbeings.masters;
 import isen.objectconcept.gamemas.entities.humanbeings.Human;
 import isen.objectconcept.gamemas.map.Cell;
 import isen.objectconcept.gamemas.map.Map;
-import isen.objectconcept.gamemas.messages.MessageHuman;
 
 public class MasterHuman extends Human implements Master {
 
