@@ -25,6 +25,11 @@ public class ShortestPath {
         }
     }
 
+    /**
+     * Duplicate the map and convert to map Binary Matrix
+     * @param matrix
+     * @return
+     */
     public static int[][] toBinary(Cell[][] matrix){
         int[][] binary = new int[matrix.length][matrix[0].length];
 
@@ -41,6 +46,14 @@ public class ShortestPath {
         return binary;
     }
 
+    /**
+     * Find the shortest path by checking all posibilities
+     * using breadth First Search Method
+     * @param matrix
+     * @param start
+     * @param end
+     * @return
+     */
     public static ShortestPoint shortestPath(Cell[][] matrix, Point start, Point end) {
         int sx = start.getX(), sy = start.getY();
         int dx = end.getX(), dy = end.getY();
@@ -66,7 +79,7 @@ public class ShortestPath {
             }
         }
 
-        //breadth first search
+        //Breadth first search
         LinkedList<SafeCell> queue = new LinkedList<>();
         SafeCell src = cells[sx][sy];
         src.dist = 0;
@@ -79,26 +92,26 @@ public class ShortestPath {
                 dest = p;
                 break;
             }
-            // moving up
+            // moving North
             visit(cells, queue, p.x - 1, p.y, p);
-            // moving down
+            // moving South
             visit(cells, queue, p.x + 1, p.y, p);
-            // moving left
+            // moving West
             visit(cells, queue, p.x, p.y - 1, p);
-            //moving right
+            //moving East
             visit(cells, queue, p.x, p.y + 1, p);
 
-            // moving up-left
+            // moving North-West
             visit(cells, queue, p.x - 1, p.y - 1, p);
-            // moving up-right
+            // moving North-East
             visit(cells, queue, p.x - 1, p.y + 1, p);
-            // moving down-left
+            // moving South-West
             visit(cells, queue, p.x + 1, p.y - 1, p);
-            //moving down-right
+            //moving South-East
             visit(cells, queue, p.x + 1, p.y + 1, p);
         }
 
-        //compose the path if path exists
+        //Compose the path if path exists
         if (dest == null) {
             System.out.println("there is absolutely no path back home");
             return null;
@@ -115,7 +128,7 @@ public class ShortestPath {
 
             //Move 2 Steps
             if(path.size() >= 3){
-                //index 0 is same as start point
+                //Index 0 is same as start point
                 stop = path.get(2);
                 num_of_steps = 2;
             }
@@ -129,7 +142,14 @@ public class ShortestPath {
     }
 
 
-    //function to update cell visiting status
+    /**
+     * function to update cell visiting status
+     * @param cells
+     * @param queue
+     * @param x
+     * @param y
+     * @param parent
+     */
     private static void visit(SafeCell[][] cells, LinkedList<SafeCell> queue, int x, int y, SafeCell parent) {
         //out of bounds
         if (x < 0 || x >= cells.length || y < 0 || y >= cells[0].length || cells[x][y] == null) {

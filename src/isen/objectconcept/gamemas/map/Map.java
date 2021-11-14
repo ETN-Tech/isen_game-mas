@@ -39,12 +39,14 @@ public class Map {
                 // Simulation Starts
                 System.out.println("Step: " + step);
                 for (HumanBeing being : players) {
-                    System.out.print(being.getColor_code()+being.getFigure());
+                    System.out.print(being.getColor_code());
                     being.move(this);
                     if (being instanceof Master masterEntity && being.getMessages().size() == 8) {
                         winners.add(being);
                     }
+
                 }
+                System.out.println(Color.DEFAULT_COLOR.toString());
                 print();
                 System.out.flush();
                 Thread.sleep(10);

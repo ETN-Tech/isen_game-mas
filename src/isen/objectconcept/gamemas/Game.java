@@ -8,7 +8,7 @@ public class Game {
     private final Map map = new Map();
 
     static boolean gameRunning = true;
-    public static final int winMessagesNumber = 4;
+    public static final int winMessagesNumber = 8;
     private static final int maxEnergyPoints = 20;
 
     public Game() {
