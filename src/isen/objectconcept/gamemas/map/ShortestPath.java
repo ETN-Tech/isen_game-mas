@@ -117,11 +117,12 @@ public class ShortestPath {
             return null;
         } else {
             LinkedList<SafeCell> path = new LinkedList<>();
-            p = dest;
+
             do {
                 path.addFirst(p);
 
             } while ((p = p.prev) != null);
+
             System.out.println(path);
             SafeCell stop;
             int num_of_steps;

@@ -21,7 +21,6 @@ public class Map {
     private static final int rows = 12;
     private static final int safeZoneColumns = 3;
     private static final int safeZoneRows = 3;
-    private static final int maxTurns = 1000;
 
 
     private final Cell[][] cells = new Cell[columns][rows];
@@ -33,29 +32,6 @@ public class Map {
     public Map() {
         initMap();
         initCreatures();
-        int step = 1;
-        try {
-            while (winners.size() < 1 && step <= maxTurns) {
-                // Simulation Starts
-                System.out.println("Step: " + step);
-                for (HumanBeing being : players) {
-                    System.out.print(being.getColor_code());
-                    being.move(this);
-                    if (being instanceof Master masterEntity && being.getMessages().size() == 8) {
-                        winners.add(being);
-                    }
-
-                }
-                System.out.println(Color.DEFAULT_COLOR.toString());
-                print();
-                System.out.flush();
-                Thread.sleep(10);
-                step++;
-            }
-        }
-        catch (InterruptedException ex){
-            System.out.println(ex);
-        }
     }
 
     public Cell[][] getCells() {
@@ -64,6 +40,14 @@ public class Map {
 
     public ArrayList<HumanBeing> getWinners() {
         return winners;
+    }
+
+    public void addWinners(HumanBeing humanBeing) {
+        winners.add(humanBeing);
+    }
+
+    public ArrayList<HumanBeing> getPlayers() {
+        return players;
     }
 
     /* ------ INITIALIZATION ------ */
@@ -185,19 +169,16 @@ public class Map {
         StringBuilder strMap = new StringBuilder("|");
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < columns; x++) {
+
                 Cell cell = cells[x][y];
                 strMap.append(" ").append(cell.getEntity().getFigure()).append(" |");
-                    switch (cell.getEntity().getType()) {
-                        case OBSTACLE:
-                            System.out.print(cell.getEntity().getColor_code() + " + ");
-                            break;
-                        case EMPTY:
-                            System.out.print("  . ");
-                            break;
-                        default:
-                            System.out.print(cell.getEntity().getColor_code() + cell.getEntity().getFigure() + " ");
-                    }
-                    System.out.print(Color.DEFAULT_COLOR.toString());
+
+                switch (cell.getEntity().getType()) {
+                    case OBSTACLE -> System.out.print(cell.getEntity().getColor_code() + " + ");
+                    case EMPTY -> System.out.print("  . ");
+                    default -> System.out.print(cell.getEntity().getColor_code() + cell.getEntity().getFigure() + " ");
+                }
+                System.out.print(Color.DEFAULT_COLOR);
 
                 // if end of map (width), print line
                 if (cell.getX() == columns - 1) {

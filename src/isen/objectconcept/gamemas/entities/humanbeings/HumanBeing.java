@@ -5,7 +5,6 @@ import isen.objectconcept.gamemas.entities.Empty;
 import isen.objectconcept.gamemas.entities.Entity;
 import isen.objectconcept.gamemas.entities.Obstacle;
 import isen.objectconcept.gamemas.entities.humanbeings.masters.Master;
-import isen.objectconcept.gamemas.enums.Color;
 import isen.objectconcept.gamemas.map.*;
 import isen.objectconcept.gamemas.enums.EntityType;
 
@@ -44,16 +43,8 @@ public abstract class HumanBeing extends Entity {
         return messages;
     }
 
-    public int getEnergyPoints() {
-        return energyPoints;
-    }
-
     public void setEnergyPoints(int energyPoints) {
         this.energyPoints = energyPoints;
-    }
-
-    public void decreaseEnergyPoints() {
-        energyPoints--;
     }
 
     public String getColor_code() {
@@ -65,24 +56,13 @@ public abstract class HumanBeing extends Entity {
      * @param otherEntity entity to meet
      */
     public void meet(HumanBeing otherEntity) {
-        EntityType ally;
-
-        switch (type) {
-            case ELF :
-                ally = EntityType.HUMAN;
-                break;
-            case GOBLIN :
-                ally = EntityType.ORC;
-                break;
-            case HUMAN :
-                ally = EntityType.ELF;
-                break;
-            case ORC :
-                ally = EntityType.GOBLIN;
-                break;
-            default :
-                throw new IllegalStateException("Unexpected value: " + type);
-        }
+        EntityType ally = switch (type) {
+            case ELF -> EntityType.HUMAN;
+            case GOBLIN -> EntityType.ORC;
+            case HUMAN -> EntityType.ELF;
+            case ORC -> EntityType.GOBLIN;
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
 
         // check if ally
         if (otherEntity.getType() == ally) {
@@ -237,22 +217,21 @@ public abstract class HumanBeing extends Entity {
             }
         }
         // if low on energy points, find way back to safezone
-        else if(this.energyPoints > 0 && this.energyPoints <= refillPoints){
+        else if(this.energyPoints > 0){
             Point start = new Point(x,y);
-            ShortestPoint stop = findSafeZone(cells, start);
         }
         // Turn into an obstacle if energy points is 0
         else if(this.energyPoints == 0){
             Cell current_cell = cells[getPosition().getX()][getPosition().getY()];
 
-            System.out.println("\u001B[31m"+this.getFigure()+": Has Turned into an obstacle");
+            System.out.println("\u001B[31m"+ this.getFigure() +": Has Turned into an obstacle");
             System.out.print("\u001B[0m");
 
             current_cell.setEntity(new Obstacle());
         }
 
         // Check Interaction only if Entity was moved
-        if(moved == true){
+        if(moved){
             checkInteraction(map);
         }
     }
@@ -267,13 +246,13 @@ public abstract class HumanBeing extends Entity {
         int row_limit = map.getCells().length;
         int column_limit = map.getCells()[0].length;
 
-        //First Check if master is found
+        // First Check if master is found
         for(int row = Math.max(0, x-1); row <= Math.min(x+1, row_limit-1); row++){
             for(int col = Math.max(0,y- 1); col <= Math.min(y+1, column_limit-1); col++){
+
                 if(row != x || col != y){
-                    boolean is_not_empty = map.getCells()[row][col].getEntity().getType() != EMPTY;
                     boolean is_same_type = map.getCells()[row][col].getEntity().getType() == this.getType();
-                    boolean is_not_obstacle = map.getCells()[row][col].getEntity().getType() != OBSTACLE;
+
                     if ( is_same_type && map.getCells()[row][col].getEntity() instanceof HumanBeing entity && map.getCells()[row][col].getEntity() instanceof Master masterEntity) {
                         System.out.println(this.getFigure()+ ": Master found - "+map.getCells()[row][col].getEntity().getFigure());
                         this.meet(entity);
@@ -282,9 +261,11 @@ public abstract class HumanBeing extends Entity {
                 }
             }
         }
+
         // If no master Check Neighbour cells for interactions
         for(int row = Math.max(1, x-1); row <= Math.min(x+1, row_limit-1); row++){
             for(int col = Math.max(1,y- 1); col <= Math.min(y+1, column_limit-1); col++){
+
                 if(row != x || col != y){
                     boolean is_not_empty = map.getCells()[row][col].getEntity().getType() != EMPTY;
                     boolean is_not_same_type = map.getCells()[row][col].getEntity().getType() != this.getType();
@@ -292,6 +273,7 @@ public abstract class HumanBeing extends Entity {
 
                     if(is_not_empty && is_not_same_type && is_not_obstacle){
                         System.out.println(this.getFigure()+ ": I have found " +map.getCells()[row][col].getEntity().getFigure());
+
                         if (map.getCells()[row][col].getEntity() instanceof HumanBeing aroundEntity) {
                             this.meet(aroundEntity);
                             return;
@@ -311,10 +293,12 @@ public abstract class HumanBeing extends Entity {
     public ShortestPoint findSafeZone(Cell[][] cells, Point start){
         for(Cell[] row: cells) {
             for (Cell cols: row) {
+
                 if(cols.getType().toString() == this.getType().toString()){
                     Point end = new Point(cols.getX(), cols.getY());
                     System.out.println(this.getFigure()+": Shortest path to safezone");
                     ShortestPoint stop = ShortestPath.shortestPath(cells, start, end);
+
                     if(stop != null){
                         this.setLast_position(getPosition());
                         this.setPosition(new Point(stop.getX(),stop.getY()));
@@ -323,7 +307,6 @@ public abstract class HumanBeing extends Entity {
                         Cell current_cell = cells[this.getPosition().getX()][this.getPosition().getY()];
 
                         last_cell.setEntity(new Empty());
-
                         current_cell.setEntity(this);
 
                         if(current_cell.getType().toString() == this.getType().toString()){
@@ -373,14 +356,17 @@ public abstract class HumanBeing extends Entity {
 
         int row_limit = cells.length ;
         int column_limit = cells[0].length ;
+
         for(int x = Math.max(0, index.getX() -1); x <= Math.min(index.getX() +1, row_limit-1); x++){
             for(int y = Math.max(0, index.getY()- 1); y <= Math.min(index.getY() +1, column_limit-1); y++){
+
                 if(index.getX() != x || index.getY() != y){
+
                     if(cells[x][y].getEntity().getType() == EMPTY){
                         Point end = new Point(x,y);
                         ShortestPoint stop = ShortestPath.shortestPath(cells, start, end);
-                        if(stop != null){
 
+                        if(stop != null){
                             this.setLast_position(new Point(getPosition().getX(),getPosition().getY()));
                             this.setPosition(new Point(stop.getX(),stop.getY()));
                             Cell last_cell = cells[getLast_position().getX()][getLast_position().getY()];
@@ -415,9 +401,9 @@ public abstract class HumanBeing extends Entity {
         int m = map.getCells().length - 1;
         int n = map.getCells()[0].length - 1;
 
-        Random random = new Random();
         // Generate a random number from 0 to 7
         int random_direction = random.nextInt(8);
+
         //All 8 directions : E, N, W, S, NE, NW, SE, SW
         Point[] all_directions = { new Point(0,1), new Point(1,0), new Point(0,-1),
                                    new Point(-1,0), new Point(1,1), new Point(1,-1),
@@ -442,17 +428,18 @@ public abstract class HumanBeing extends Entity {
 
         boolean check_energy_points = this.energyPoints > 0;
         boolean check_empty_cell = map.getCells()[getPosition().getX() + direction.getX()][getPosition().getY() + direction.getY()].getEntity().getType() == EMPTY;
+
         if(check_empty_cell && check_energy_points ) {
             setLast_position(new Point(getPosition().getX(),getPosition().getY()));
             getPosition().setX(getPosition().getX()  + direction.getX());
             getPosition().setY(getPosition().getY()  + direction.getY());
-            int x = getPosition().getX();
-            int y = getPosition().getY();
 
             Cell last_cell = map.getCells()[getLast_position().getX()][getLast_position().getY()];
             Cell current_cell = map.getCells()[getPosition().getX()][getPosition().getY()];
+
             last_cell.setEntity(new Empty());
             current_cell.setEntity(this);
+
             if(current_cell.getType().toString() == this.getType().toString()){
                 this.setEnergyPoints(30);
             }

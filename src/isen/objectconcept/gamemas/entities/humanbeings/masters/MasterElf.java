@@ -27,7 +27,7 @@ public class MasterElf extends Elf implements Master {
 
     @Override
     public String generateMessage() {
-        return new String("Elf message");
+        return "Elf message";
     }
 
 }

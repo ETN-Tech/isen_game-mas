@@ -26,6 +26,6 @@ public class MasterHuman extends Human implements Master {
     }
     @Override
     public String generateMessage() {
-        return new String("Human message");
+        return "Human message";
     }
 }

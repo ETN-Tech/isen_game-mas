@@ -24,6 +24,6 @@ public class MasterGoblin extends Goblin implements Master {
 
     @Override
     public String generateMessage() {
-        return new String("Goblin message");
+        return "Goblin message";
     }
 }

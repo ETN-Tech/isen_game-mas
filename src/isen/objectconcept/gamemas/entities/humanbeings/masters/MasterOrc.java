@@ -25,6 +25,6 @@ public class MasterOrc extends Orc implements Master {
 
     @Override
     public String generateMessage() {
-        return new String("Orc message");
+        return "Orc message";
     }
 }
