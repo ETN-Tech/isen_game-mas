@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>isen.objectconcept.gamemas</OriginalElement>
+  <nodes>
+    <node x="560.375" y="0.0">isen.objectconcept.gamemas.entities.Entity</node>
+    <node x="624.5" y="742.0">isen.objectconcept.gamemas.entities.humanbeings.Goblin</node>
+    <node x="27.5" y="847.0">isen.objectconcept.gamemas.entities.humanbeings.masters.MasterElf</node>
+    <node x="469.5" y="847.0">isen.objectconcept.gamemas.entities.humanbeings.masters.MasterGoblin</node>
+    <node x="695.5" y="847.0">isen.objectconcept.gamemas.entities.humanbeings.masters.MasterHuman</node>
+    <node x="747.875" y="404.5">isen.objectconcept.gamemas.entities.Obstacle</node>
+    <node x="248.5" y="847.0">isen.objectconcept.gamemas.entities.humanbeings.masters.MasterOrc</node>
+    <node x="0.0" y="1316.0">isen.objectconcept.gamemas.map.ShortestPoint</node>
+    <node x="490.0" y="1038.0">isen.objectconcept.gamemas.Game</node>
+    <node x="816.5" y="742.0">isen.objectconcept.gamemas.entities.humanbeings.Human</node>
+    <node x="1336.5" y="0.0">isen.objectconcept.gamemas.enums.Color</node>
+    <node x="628.875" y="404.5">isen.objectconcept.gamemas.entities.Empty</node>
+    <node x="313.875" y="172.0">isen.objectconcept.gamemas.entities.humanbeings.HumanBeing</node>
+    <node x="999.5" y="0.0">isen.objectconcept.gamemas.map.Map</node>
+    <node x="357.125" y="742.0">isen.objectconcept.gamemas.entities.humanbeings.masters.Master</node>
+    <node x="239.0" y="1316.0">isen.objectconcept.gamemas.map.Point</node>
+    <node x="249.0" y="1038.0">isen.objectconcept.gamemas.enums.CellType</node>
+    <node x="0.0" y="742.0">isen.objectconcept.gamemas.entities.humanbeings.Elf</node>
+    <node x="174.0" y="742.0">isen.objectconcept.gamemas.entities.humanbeings.Orc</node>
+    <node x="726.0" y="1038.0">isen.objectconcept.gamemas.map.Cell</node>
+    <node x="410.0" y="1316.0">isen.objectconcept.gamemas.Main</node>
+    <node x="0.0" y="1038.0">isen.objectconcept.gamemas.enums.EntityType</node>
+    <node x="956.0" y="1038.0">isen.objectconcept.gamemas.map.ShortestPath</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.masters.MasterHuman" target="isen.objectconcept.gamemas.entities.humanbeings.Human" relationship="GENERALIZATION">
+      <point x="53.5" y="-73.0" />
+      <point x="856.0" y="827.0" />
+      <point x="885.5" y="827.0" />
+      <point x="0.0" y="27.5" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.Empty" target="isen.objectconcept.gamemas.entities.Entity" relationship="GENERALIZATION">
+      <point x="0.0" y="-27.5" />
+      <point x="0.0" y="61.0" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.Orc" target="isen.objectconcept.gamemas.entities.humanbeings.HumanBeing" relationship="GENERALIZATION">
+      <point x="0.0" y="-27.5" />
+      <point x="233.5" y="717.0" />
+      <point x="461.375" y="717.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.masters.MasterElf" target="isen.objectconcept.gamemas.entities.humanbeings.masters.Master" relationship="REALIZATION">
+      <point x="50.25" y="-73.0" />
+      <point x="178.25" y="827.0" />
+      <point x="457.625" y="827.0" />
+      <point x="0.0" y="27.5" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.Elf" target="isen.objectconcept.gamemas.entities.humanbeings.HumanBeing" relationship="GENERALIZATION">
+      <point x="0.0" y="-27.5" />
+      <point x="55.5" y="717.0" />
+      <point x="461.375" y="717.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.masters.MasterOrc" target="isen.objectconcept.gamemas.entities.humanbeings.masters.Master" relationship="REALIZATION">
+      <point x="50.25" y="-73.0" />
+      <point x="399.25" y="827.0" />
+      <point x="457.625" y="827.0" />
+      <point x="0.0" y="27.5" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.Goblin" target="isen.objectconcept.gamemas.entities.humanbeings.HumanBeing" relationship="GENERALIZATION">
+      <point x="0.0" y="-27.5" />
+      <point x="691.5" y="717.0" />
+      <point x="461.375" y="717.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.HumanBeing" target="isen.objectconcept.gamemas.entities.Entity" relationship="GENERALIZATION">
+      <point x="0.0" y="-260.0" />
+      <point x="461.375" y="147.0" />
+      <point x="678.375" y="147.0" />
+      <point x="0.0" y="61.0" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.masters.MasterGoblin" target="isen.objectconcept.gamemas.entities.humanbeings.Goblin" relationship="GENERALIZATION">
+      <point x="51.5" y="-73.0" />
+      <point x="624.0" y="817.0" />
+      <point x="691.5" y="817.0" />
+      <point x="0.0" y="27.5" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.masters.MasterHuman" target="isen.objectconcept.gamemas.entities.humanbeings.masters.Master" relationship="REALIZATION">
+      <point x="-53.5" y="-73.0" />
+      <point x="749.0" y="827.0" />
+      <point x="457.625" y="827.0" />
+      <point x="0.0" y="27.5" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.Obstacle" target="isen.objectconcept.gamemas.entities.Entity" relationship="GENERALIZATION">
+      <point x="0.0" y="-27.5" />
+      <point x="806.875" y="147.0" />
+      <point x="678.375" y="147.0" />
+      <point x="0.0" y="61.0" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.Human" target="isen.objectconcept.gamemas.entities.humanbeings.HumanBeing" relationship="GENERALIZATION">
+      <point x="0.0" y="-27.5" />
+      <point x="885.5" y="717.0" />
+      <point x="461.375" y="717.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.masters.MasterElf" target="isen.objectconcept.gamemas.entities.humanbeings.Elf" relationship="GENERALIZATION">
+      <point x="-50.25" y="-73.0" />
+      <point x="77.75" y="827.0" />
+      <point x="55.5" y="827.0" />
+      <point x="0.0" y="27.5" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.masters.MasterOrc" target="isen.objectconcept.gamemas.entities.humanbeings.Orc" relationship="GENERALIZATION">
+      <point x="-50.25" y="-73.0" />
+      <point x="298.75" y="817.0" />
+      <point x="233.5" y="817.0" />
+      <point x="0.0" y="27.5" />
+    </edge>
+    <edge source="isen.objectconcept.gamemas.entities.humanbeings.masters.MasterGoblin" target="isen.objectconcept.gamemas.entities.humanbeings.masters.Master" relationship="REALIZATION">
+      <point x="-51.5" y="-73.0" />
+      <point x="521.0" y="827.0" />
+      <point x="457.625" y="827.0" />
+      <point x="0.0" y="27.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="693.0" y="406.0" />
+  <SelectedNodes>
+    <node>isen.objectconcept.gamemas.entities.humanbeings.HumanBeing</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
