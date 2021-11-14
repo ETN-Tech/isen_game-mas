@@ -14,7 +14,7 @@ public class Goblin extends HumanBeing {
                 EntityType.GOBLIN,
                 figure,
                 new ArrayList<>(List.of(Direction.N, Direction.NE, Direction.E)),
-                new MessageGoblin("Goblin message")
+                new String("Goblin message")
         );
     }
 }

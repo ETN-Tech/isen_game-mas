@@ -1,5 +1,7 @@
 package isen.objectconcept.gamemas;
 
+import isen.objectconcept.gamemas.entities.humanbeings.HumanBeing;
+import isen.objectconcept.gamemas.entities.humanbeings.masters.Master;
 import isen.objectconcept.gamemas.map.Map;
 
 public class Game {
@@ -8,8 +10,7 @@ public class Game {
 
     static boolean gameRunning = true;
     private int currentTurn = 0;
-    private static final int maxTurns = 1000;
-    public static final int winMessagesNumber = 10;
+    public static final int winMessagesNumber = 4;
     private static final int maxEnergyPoints = 20;
 
     public Game() {
@@ -19,17 +20,18 @@ public class Game {
      * Start the game
      */
     public void start() {
-        System.out.println("\n> GAME STARTED\n");
-
-
-        // Looping through steps
-        while (currentTurn < maxTurns && gameRunning) {
-            // Play a turn
-            playTurn();
+        System.out.println("\n> FINAL BOARD\n");
+        map.print();
+        System.out.println("Winners");
+        System.out.println("---------");
+        if(getMap().getWinners().size() > 0) {
+            for (HumanBeing winner : getMap().getWinners()) {
+                System.out.println(winner.getFigure());
+                System.out.println("Messages: " + winner.getMessages());
+            }
         }
-
-        if (currentTurn >= maxTurns) {
-            System.out.println("Max number of turn reached. End of Game, no winner.");
+        else{
+            System.out.println("There was no winner, play again...");
         }
 
         System.out.println("\nGAME OVER\n");
@@ -42,7 +44,7 @@ public class Game {
         // increase turns
         currentTurn++;
 
-        map.moveEntities();
+//        map.moveEntities();
         map.print();
     }
 

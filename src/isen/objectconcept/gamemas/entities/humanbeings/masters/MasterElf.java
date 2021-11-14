@@ -1,6 +1,9 @@
 package isen.objectconcept.gamemas.entities.humanbeings.masters;
 
+import isen.objectconcept.gamemas.entities.Empty;
 import isen.objectconcept.gamemas.entities.humanbeings.Elf;
+import isen.objectconcept.gamemas.map.Cell;
+import isen.objectconcept.gamemas.map.Map;
 import isen.objectconcept.gamemas.messages.MessageElf;
 
 public class MasterElf extends Elf implements Master {
@@ -18,9 +21,15 @@ public class MasterElf extends Elf implements Master {
         return masterElf;
     }
 
+    public void move(Map map) {
+        //Do nothing
+        Cell current_cell = map.getCells()[getPosition().getX()][getPosition().getY()];
+        current_cell.setEntity(this);
+    }
+
     @Override
-    public MessageElf generateMessage() {
-        return new MessageElf("Elf message");
+    public String generateMessage() {
+        return new String("Elf message");
     }
 
 }

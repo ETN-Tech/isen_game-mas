@@ -22,19 +22,53 @@ public class Map {
     private static final int rows = 10;
     private static final int safeZoneColumns = 3;
     private static final int safeZoneRows = 3;
+    private static final int maxTurns = 1000;
+
 
     private final Cell[][] cells = new Cell[columns][rows];
+
+    ArrayList<HumanBeing> players = new ArrayList<>();
+    ArrayList<HumanBeing> winners = new ArrayList<>();
+
 
     public Map() {
         initMap();
         initCreatures();
+        int step = 1;
+        try {
+            while (winners.size() < 1 && step <= maxTurns) {
+                // Simulation Starts
+                System.out.println("Step: " + step);
+                for (HumanBeing being : players) {
+                    being.move(this);
+                    if (being instanceof Master masterEntity && being.getMessages().size() == 4) {
+                        winners.add(being);
+                    }
+                }
+                print();
+                System.out.flush();
+                Thread.sleep(1000);
+                step++;
+            }
+        }
+        catch (InterruptedException ex){
+            System.out.println(ex);
+        }
 
-        printCellsType();
-        print();
+//        System.out.println("Winners");
+//        System.out.println("---------");
+//        for (HumanBeing winner: winners){
+//            System.out.println(winner.getFigure());
+//            System.out.println(winner.getMessages());
+//        }
     }
 
     public Cell[][] getCells() {
         return cells;
+    }
+
+    public ArrayList<HumanBeing> getWinners() {
+        return winners;
     }
 
     /* ------ INITIALIZATION ------ */
@@ -77,21 +111,47 @@ public class Map {
 
     private void initCreatures() {
         // init masters
-        cells[0][0].setEntity(MasterElf.getInstance());
-        cells[rows - 1][0].setEntity(MasterGoblin.getInstance());
-        cells[rows - 1][columns - 1].setEntity(MasterHuman.getInstance());
-        cells[0][columns - 1].setEntity(MasterOrc.getInstance());
+        Elf masterElf = MasterElf.getInstance();
+        masterElf.setPosition(new Point(0,0));
+        Goblin masterGoblin = MasterGoblin.getInstance();
+        masterGoblin.setPosition(new Point(rows - 1,0));
+        Human masterHuman = MasterHuman.getInstance();
+        masterHuman.setPosition(new Point(rows - 1,columns - 1));
+        Orc masterOrc = MasterOrc.getInstance();
+        masterOrc.setPosition(new Point(0,columns - 1));
+        players.add(masterElf);
+        players.add(masterGoblin);
+        players.add(masterHuman);
+        players.add(masterOrc);
 
         // init creatures
         for (int i = 0; i < numberCreaturesPerRace - 1; i++) {
-            pickRandomEmptyCell(0, safeZoneRows, 0, safeZoneColumns)
-                    .setEntity(new Elf("E"+ (i + 1)));
-            pickRandomEmptyCell(0, safeZoneRows, columns - safeZoneColumns, columns)
-                    .setEntity(new Goblin("G"+ (i + 1)));
-            pickRandomEmptyCell(rows - safeZoneRows, rows, columns - safeZoneColumns, columns)
-                    .setEntity(new Human("H"+ (i + 1)));
-            pickRandomEmptyCell(rows - safeZoneRows, rows, 0, safeZoneColumns)
-                    .setEntity(new Orc("O"+ (i + 1)));
+            Elf elf = new Elf("E"+ (i + 1));
+            Goblin goblin = new Goblin("G"+ (i + 1));
+            Human human = new Human("H"+ (i + 1));
+            Orc orc = new Orc("O"+ (i + 1));
+            players.add(elf);
+            players.add(goblin);
+            players.add(orc);
+            players.add(human);
+
+
+
+            Cell elfPosition = pickRandomEmptyCell(0, safeZoneRows, 0, safeZoneColumns);
+            elfPosition.setEntity(elf);
+            elf.setPosition(new Point(elfPosition.getX(), elfPosition.getY()));
+
+            Cell goblinPosition = pickRandomEmptyCell(0, safeZoneRows, columns - safeZoneColumns, columns);
+            goblinPosition.setEntity(goblin);
+            goblin.setPosition(new Point(goblinPosition.getX(), goblinPosition.getY()));
+
+            Cell humanPosition = pickRandomEmptyCell(rows - safeZoneRows, rows, columns - safeZoneColumns, columns);
+            humanPosition.setEntity(elf);
+            human.setPosition(new Point(humanPosition.getX(), humanPosition.getY()));
+
+            Cell orcPosition = pickRandomEmptyCell(rows - safeZoneRows, rows, 0, safeZoneColumns);
+            orcPosition.setEntity(elf);
+            orc.setPosition(new Point(orcPosition.getX(), orcPosition.getY()));
         }
 
     }
@@ -141,11 +201,16 @@ public class Map {
                     ArrayList<Direction> availableDirections = new ArrayList<>();
 
                     // check energyPoints and baseMessage, decide to go forward or backward
-                    if (currentEntity.getEnergyPoints() > 10 || currentEntity.getBaseMessage() == null) {
+//                    if (currentEntity.getEnergyPoints() > 10 || currentEntity.getBaseMessage() == null) {
+
+                    if (currentEntity.getEnergyPoints() > 10 ) {
                         //System.out.println("Go forward");
+                        System.out.println("Forward: "+currentEntity.getForwardDirections());
+
                         availableDirections.addAll(currentEntity.getForwardDirections());
                     } else {
                         //System.out.println("Go backward");
+                        System.out.println("Back: "+currentEntity.getBackwardDirections());
                         availableDirections.addAll(currentEntity.getBackwardDirections());
                     }
 
@@ -162,10 +227,19 @@ public class Map {
                             targetCell = attainableCells.get(randomIndex);
 
                             // Check if targetCell is empty, otherwise invalid move
-                            if (targetCell.getEntity().getType() == EntityType.EMPTY) {
+                            if (targetCell.getEntity().getType() == EntityType.EMPTY && currentEntity.getEnergyPoints() > 0) {
                                 // move entity to targetCell
                                 currentCell.moveEntityTo(targetCell);
-                                currentEntity.decreaseEnergyPoints();
+                                // if safezone, set energy_points to 20
+                                if(targetCell.getType().toString() == currentCell.getEntity().getType().toString()){
+                                    currentEntity.setEnergyPoints(20);
+                                }
+                                // reduce energy_points
+                                else {
+                                    currentEntity.decreaseEnergyPoints();
+                                }
+                                System.out.println(currentEntity.getFigure()+"- Energy Points: "+currentEntity.getEnergyPoints());
+
 
                                 // Check for people around
                                 for (Cell aroundCell: getAttainableCellsAround(targetCell)) {
@@ -263,15 +337,13 @@ public class Map {
 
     /* ----- MAP PRINT ----- */
     public void print() {
-        System.out.println("\nMAP: Entities");
-        System.out.println("-------------");
+//        System.out.println("\nMAP: Entities");
+//        System.out.println("-------------");
 
         StringBuilder strMap = new StringBuilder("|");
-
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < columns; x++) {
                 Cell cell = cells[x][y];
-
                 strMap.append(" ").append(cell.getEntity().getFigure()).append(" |");
                     switch (cell.getEntity().getType()) {
                         case HUMAN:
@@ -294,8 +366,6 @@ public class Map {
                             break;
                     }
                     System.out.print("\u001B[0m");
-
-
 
                 // if end of map (width), print line
                 if (cell.getX() == columns - 1) {

@@ -14,7 +14,7 @@ public class Human extends HumanBeing {
                 EntityType.HUMAN,
                 figure,
                 new ArrayList<>(List.of(Direction.E, Direction.SE, Direction.S)),
-                new MessageHuman("Human message")
+                new String("Human message")
         );
     }
 }

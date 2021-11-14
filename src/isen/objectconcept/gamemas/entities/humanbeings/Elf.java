@@ -15,7 +15,7 @@ public class Elf extends HumanBeing {
                 EntityType.ELF,
                 figure,
                 new ArrayList<>(List.of(Direction.W, Direction.NW, Direction.N)),
-                new MessageElf("Elf message")
+                new String("Elf message")
         );
     }
 }

@@ -14,7 +14,7 @@ public class Orc extends HumanBeing {
                 EntityType.ORC,
                 figure,
                 new ArrayList<>(List.of(Direction.S, Direction.SW, Direction.W)),
-                new MessageOrc("Orc message")
+                new String("Orc message")
         );
     }
 }
