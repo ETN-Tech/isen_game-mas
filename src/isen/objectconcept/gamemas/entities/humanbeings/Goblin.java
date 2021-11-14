@@ -9,12 +9,7 @@ import java.util.List;
 
 public class Goblin extends HumanBeing {
 
-    public Goblin(String figure) {
-        super(
-                EntityType.GOBLIN,
-                figure,
-                new ArrayList<>(List.of(Direction.N, Direction.NE, Direction.E)),
-                new MessageGoblin("Goblin message")
-        );
+    public Goblin(int x, int y, String figure) {
+        super(x, y, EntityType.GOBLIN, figure, new ArrayList<>(List.of(Direction.N, Direction.NE, Direction.E)), new MessageGoblin("Goblin message"));
     }
 }

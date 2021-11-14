@@ -7,11 +7,11 @@ public class MasterHuman extends Human implements Master {
 
 
     private static MasterHuman masterHumana;
-    private MasterHuman(){
-        super("HM");
+    private MasterHuman() {
+        super(0, 0, "HM");
     }
 
-    public static MasterHuman getInstance(){
+    public static MasterHuman getInstance() {
         if(masterHumana==null){
             masterHumana = new MasterHuman();
         }

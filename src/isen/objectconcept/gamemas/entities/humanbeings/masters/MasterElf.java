@@ -7,11 +7,11 @@ public class MasterElf extends Elf implements Master {
 
 
     private static MasterElf masterElf;
-    private MasterElf(){
-        super("EM");
+    private MasterElf() {
+        super(0, 0, "EM");
     }
 
-    public static MasterElf getInstance(){
+    public static MasterElf getInstance() {
         if(masterElf==null){
             masterElf = new MasterElf();
         }

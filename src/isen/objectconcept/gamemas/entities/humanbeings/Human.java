@@ -9,12 +9,7 @@ import java.util.List;
 
 public class Human extends HumanBeing {
 
-    public Human(String figure) {
-        super(
-                EntityType.HUMAN,
-                figure,
-                new ArrayList<>(List.of(Direction.E, Direction.SE, Direction.S)),
-                new MessageHuman("Human message")
-        );
+    public Human(int x, int y, String figure) {
+        super(x, y, EntityType.HUMAN, figure, new ArrayList<>(List.of(Direction.E, Direction.SE, Direction.S)), new MessageHuman("Human message"));
     }
 }

@@ -1,5 +1,6 @@
 package isen.objectconcept.gamemas.map;
 
+import isen.objectconcept.gamemas.entities.Entity;
 import isen.objectconcept.gamemas.entities.Obstacle;
 import isen.objectconcept.gamemas.entities.humanbeings.*;
 import isen.objectconcept.gamemas.entities.humanbeings.masters.*;
@@ -8,7 +9,6 @@ import isen.objectconcept.gamemas.enums.Direction;
 import isen.objectconcept.gamemas.enums.EntityType;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Map {
@@ -18,12 +18,15 @@ public class Map {
     private static final int obstacleProba = 5;
     private static final int numberCreaturesPerRace = 4;
 
-    private static final int columns = 10;
-    private static final int rows = 10;
-    private static final int safeZoneColumns = 3;
-    private static final int safeZoneRows = 3;
+    public static final int columns = 10;
+    public static final int rows = 10;
+    public static final int safeZoneColumns = 3;
+    public static final int safeZoneRows = 3;
 
     private final Cell[][] cells = new Cell[columns][rows];
+
+    private ArrayList<HumanBeing> humanBeings = new ArrayList<>();
+    private ArrayList<Obstacle> obstacles = new ArrayList<>();
 
     public Map() {
         initMap();
@@ -31,6 +34,16 @@ public class Map {
 
         printCellsType();
         print();
+    }
+
+    /* ----- GETTERS ----- */
+
+    public ArrayList<HumanBeing> getHumanBeings() {
+        return humanBeings;
+    }
+
+    public ArrayList<Obstacle> getObstacles() {
+        return obstacles;
     }
 
     public Cell[][] getCells() {
@@ -66,9 +79,8 @@ public class Map {
                     // Add randomly an obstacle
                     int randomProba = random.nextInt(100) + 1;
                     if (randomProba < obstacleProba) {
-                        newCell.setEntity(new Obstacle());
+                        obstacles.add(new Obstacle(newCell.getX(), newCell.getY()));
                     }
-
                     cells[x][y] = newCell;
                 }
             }
@@ -77,21 +89,31 @@ public class Map {
 
     private void initCreatures() {
         // init masters
-        cells[0][0].setEntity(MasterElf.getInstance());
-        cells[rows - 1][0].setEntity(MasterGoblin.getInstance());
-        cells[rows - 1][columns - 1].setEntity(MasterHuman.getInstance());
-        cells[0][columns - 1].setEntity(MasterOrc.getInstance());
+        MasterElf.getInstance().moveTo(0, 0);
+        humanBeings.add(MasterElf.getInstance());
+
+        MasterGoblin.getInstance().moveTo(rows - 1, 0);
+        humanBeings.add(MasterGoblin.getInstance());
+
+        MasterHuman.getInstance().moveTo(rows - 1, columns - 1);
+        humanBeings.add(MasterHuman.getInstance());
+
+        MasterOrc.getInstance().moveTo(0, columns - 1);
+        humanBeings.add(MasterOrc.getInstance());
 
         // init creatures
         for (int i = 0; i < numberCreaturesPerRace - 1; i++) {
-            pickRandomEmptyCell(0, safeZoneRows, 0, safeZoneColumns)
-                    .setEntity(new Elf("E"+ (i + 1)));
-            pickRandomEmptyCell(0, safeZoneRows, columns - safeZoneColumns, columns)
-                    .setEntity(new Goblin("G"+ (i + 1)));
-            pickRandomEmptyCell(rows - safeZoneRows, rows, columns - safeZoneColumns, columns)
-                    .setEntity(new Human("H"+ (i + 1)));
-            pickRandomEmptyCell(rows - safeZoneRows, rows, 0, safeZoneColumns)
-                    .setEntity(new Orc("O"+ (i + 1)));
+            Cell cell = pickRandomEmptyCell(0, safeZoneRows, 0, safeZoneColumns);
+            humanBeings.add(new Elf(cell.getX(), cell.getY(),"E"+ (i + 1)));
+
+            cell = pickRandomEmptyCell(0, safeZoneRows, columns - safeZoneColumns, columns);
+            humanBeings.add(new Goblin(cell.getX(), cell.getY(), "G"+ (i + 1)));
+
+            cell = pickRandomEmptyCell(rows - safeZoneRows, rows, columns - safeZoneColumns, columns);
+            humanBeings.add(new Human(cell.getX(), cell.getY(), "H"+ (i + 1)));
+
+            cell = pickRandomEmptyCell(rows - safeZoneRows, rows, 0, safeZoneColumns);
+            humanBeings.add(new Orc(cell.getX(), cell.getY(), "O"+ (i + 1)));
         }
 
     }
@@ -111,7 +133,7 @@ public class Map {
             for (int x = columnStart; x < columnEnd; x++) {
                 Cell cell = cells[x][y];
 
-                if (cell.getEntity() == null || cell.getEntity().getType() == EntityType.EMPTY) {
+                if (getEntityInCell(cell) == null) {
                     emptyCells.add(cell);
                 }
             }
@@ -121,144 +143,60 @@ public class Map {
         return cells[randomCell.getX()][randomCell.getY()];
     }
 
-    /* ----- GAME MANAGEMENT ----- */
-
-    /**
-     * Move all entities in the Map and make them meet people around
-     */
-    public void moveEntities() {
-
-        // Loop through cells
-        for (Cell[] cellsx: cells) {
-            for (Cell currentCell: cellsx) {
-                //System.out.println("CurrentCell: "+ currentCell);
-
-                // Check if cell contains a HumanBeing that is not a Master
-                if (currentCell.getEntity() instanceof HumanBeing currentEntity && !(currentEntity instanceof Master)) {
-                    //System.out.println("CurrentEntity: "+ currentEntity);
-                    boolean validMove = false;
-
-                    ArrayList<Direction> availableDirections = new ArrayList<>();
-
-                    // check energyPoints and baseMessage, decide to go forward or backward
-                    if (currentEntity.getEnergyPoints() > 10 || currentEntity.getBaseMessage() == null) {
-                        //System.out.println("Go forward");
-                        availableDirections.addAll(currentEntity.getForwardDirections());
-                    } else {
-                        //System.out.println("Go backward");
-                        availableDirections.addAll(currentEntity.getBackwardDirections());
-                    }
-
-                    ArrayList<Cell> attainableCells = getAttainableCellsAround(currentCell, availableDirections);
-                    Cell targetCell;
-
-                    // Find an empty cell to move to
-                    do {
-                        //System.out.println("AttainableCells: "+ attainableCells);
-
-                        // check if entity can move around
-                        if (attainableCells.size() > 0) {
-                            int randomIndex = random.nextInt(attainableCells.size());
-                            targetCell = attainableCells.get(randomIndex);
-
-                            // Check if targetCell is empty, otherwise invalid move
-                            if (targetCell.getEntity().getType() == EntityType.EMPTY) {
-                                // move entity to targetCell
-                                currentCell.moveEntityTo(targetCell);
-                                currentEntity.decreaseEnergyPoints();
-
-                                // Check for people around
-                                for (Cell aroundCell: getAttainableCellsAround(targetCell)) {
-                                    // check if aroundCell has a HumanBeing inside to meet
-                                    if (aroundCell.getEntity() instanceof HumanBeing aroundEntity) {
-                                        currentEntity.meet(aroundEntity);
-                                    }
-                                }
-
-                                validMove = true;
-                            } else {
-                                attainableCells.remove(randomIndex);
-                            }
-                        } else {
-                            System.out.println("Entity can't move. Process next cell");
-                            // entity can't move, process next cell
-                            validMove = true;
-                        }
-
-                    } while(!validMove); // Loop while move is invalid
-                }
-            }
+    public Entity getEntityInCell(Cell cell) {
+        Obstacle obstacle = getObstacleInCell(cell);
+        if (obstacle != null) {
+            return obstacle;
         }
+
+        HumanBeing humanBeing = getHumanBeingInCell(cell);
+        if (humanBeing != null) {
+            return humanBeing;
+        }
+        return null;
     }
 
-    /**
-     * Return cells around currentCell attainable by its entity
-     * @param currentCell cell to look around
-     * @return a list of cells
-     */
-    public ArrayList<Cell> getAttainableCellsAround(Cell currentCell) {
-        return getAttainableCellsAround(currentCell, new ArrayList<>(List.of(Direction.values())));
-    }
-
-    /**
-     * Return cells around currentCell attainable by its entity, considering forwardDirections
-     * @param currentCell cell to look around
-     * @param availableDirections allowed directions to move
-     * @return a list of cells
-     */
-    public ArrayList<Cell> getAttainableCellsAround(Cell currentCell, ArrayList<Direction> availableDirections) {
-        ArrayList<Cell> cellsAround = new ArrayList<>();
-
-        for (Direction direction: availableDirections) {
-            int targetX, targetY;
-            // get targetX, targetY
-            switch (direction) {
-                case NW -> {
-                    targetX = currentCell.getX() - 1;
-                    targetY = currentCell.getY() - 1;
-                }
-                case N -> {
-                    targetX = currentCell.getX();
-                    targetY = currentCell.getY() - 1;
-                }
-                case NE -> {
-                    targetX = currentCell.getX() + 1;
-                    targetY = currentCell.getY() - 1;
-                }
-                case E -> {
-                    targetX = currentCell.getX() + 1;
-                    targetY = currentCell.getY();
-                }
-                case SE -> {
-                    targetX = currentCell.getX() + 1;
-                    targetY = currentCell.getY() + 1;
-                }
-                case S -> {
-                    targetX = currentCell.getX();
-                    targetY = currentCell.getY() + 1;
-                }
-                case SW -> {
-                    targetX = currentCell.getX() - 1;
-                    targetY = currentCell.getY() + 1;
-                }
-                case W -> {
-                    targetX = currentCell.getX() - 1;
-                    targetY = currentCell.getY();
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + direction);
-            }
-
-            // check if cell exist in the map
-            if (0 <= targetX && targetX < columns && 0 <= targetY && targetY < rows) {
-                Cell targetCell = cells[targetX][targetY];
-
-                // check if cell type is neutral or the same as the currentCell
-                if (targetCell.getType() == CellType.NEUTRAL || targetCell.getType() == currentCell.getType()) {
-                    cellsAround.add(targetCell);
-                }
+    public HumanBeing getHumanBeingInCell(Cell cell) {
+        for (HumanBeing humanBeing: humanBeings) {
+            // if humanBeing in this cell, return it
+            if (humanBeing.getX() == cell.getX() && humanBeing.getY() == cell.getY()) {
+                return humanBeing;
             }
         }
-        return cellsAround;
+        return null;
+    }
+
+    public Obstacle getObstacleInCell(Cell cell) {
+        for (Obstacle obstacle: obstacles) {
+            // if humanBeing in this cell, return it
+            if (obstacle.getX() == cell.getX() && obstacle.getY() == cell.getY()) {
+                return obstacle;
+            }
+        }
+        return null;
+    }
+
+    /* ----- UTILITY FUNCTIONS ----- */
+    public static CellType getCellType(int x, int y) {
+        // SafeZone Elfs (haut gauche)
+        if (x < safeZoneColumns && y < safeZoneRows) {
+            return CellType.ELF;
+        }
+        // SafeZone Gobelins (haut droite)
+        else if (x >= (columns - safeZoneColumns) && y < safeZoneRows) {
+            return CellType.GOBLIN;
+        }
+        // SafeZone Humains (bas droite)
+        else if (x >= (columns - safeZoneColumns) && y >= (rows - safeZoneRows)) {
+            return CellType.HUMAN;
+        }
+        // SafeZone Orcs (bas gauche)
+        else if (x < 3 && y >= (rows - safeZoneRows)) {
+            return CellType.ORC;
+        }
+        else {
+            return CellType.NEUTRAL;
+        }
     }
 
     /* ----- MAP PRINT ----- */
@@ -271,31 +209,23 @@ public class Map {
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < columns; x++) {
                 Cell cell = cells[x][y];
+                Entity entity = getEntityInCell(cell);
 
-                strMap.append(" ").append(cell.getEntity().getFigure()).append(" |");
-                    switch (cell.getEntity().getType()) {
-                        case HUMAN:
-                            System.out.print("\u001B[34m " + cell.getEntity().getFigure() + " ");
-                            break;
-                        case ORC:
-                            System.out.print("\u001B[35m " + cell.getEntity().getFigure() + " ");
-                            break;
-                        case ELF:
-                            System.out.print("\u001B[32m " + cell.getEntity().getFigure() + " ");
-                            break;
-                        case GOBLIN:
-                            System.out.print("\u001B[33m " + cell.getEntity().getFigure() + " ");
-                            break;
-                        case OBSTACLE:
-                            System.out.print("\u001B[31m " + " + ");
-                            break;
-                        case EMPTY:
-                            System.out.print("  . ");
-                            break;
+                // check if entity exist in this cell
+                if (entity != null){
+                    strMap.append(" ").append(entity.getFigure()).append(" |");
+
+                    switch (entity.getType()) {
+                        case HUMAN -> System.out.print("\u001B[34m " + entity.getFigure() + " ");
+                        case ORC -> System.out.print("\u001B[35m " + entity.getFigure() + " ");
+                        case ELF -> System.out.print("\u001B[32m " + entity.getFigure() + " ");
+                        case GOBLIN -> System.out.print("\u001B[33m " + entity.getFigure() + " ");
+                        case OBSTACLE -> System.out.print("\u001B[31m " + " + ");
                     }
                     System.out.print("\u001B[0m");
-
-
+                } else {
+                    System.out.print("  . ");
+                }
 
                 // if end of map (width), print line
                 if (cell.getX() == columns - 1) {
@@ -326,7 +256,7 @@ public class Map {
                     case HUMAN -> strMap.append(" H |");
                     case ORC -> strMap.append(" O |");
                     case NEUTRAL -> {
-                        if (cell.getEntity() != null && cell.getEntity().getType() == EntityType.OBSTACLE) {
+                        if (getEntityInCell(cell) != null) {
                             strMap.append(" x |");
                         } else {
                             strMap.append("   |");

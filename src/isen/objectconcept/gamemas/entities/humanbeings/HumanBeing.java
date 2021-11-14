@@ -20,8 +20,8 @@ public abstract class HumanBeing extends Entity {
     protected Message baseMessage;
     protected int energyPoints = Game.getMaxEnergyPoints();
 
-    protected HumanBeing(EntityType type, String figure, ArrayList<Direction> backwardDirections, Message baseMessage) {
-        super(type, figure);
+    protected HumanBeing(int x, int y, EntityType type, String figure, ArrayList<Direction> backwardDirections, Message baseMessage) {
+        super(x, y, type, figure);
         // generate forwardDirections from backwardDirections
         for (Direction direction: Direction.values()) {
             if (direction != backwardDirections.get(1)) {
@@ -62,32 +62,23 @@ public abstract class HumanBeing extends Entity {
      * @param otherEntity entity to meet
      */
     public void meet(HumanBeing otherEntity) {
-        EntityType ally;
-
-        switch (type) {
-            case ELF :
-                ally = EntityType.HUMAN;
-                break;
-            case GOBLIN :
-                ally = EntityType.ORC;
-                break;
-            case HUMAN :
-                ally = EntityType.ELF;
-                break;
-            case ORC :
-                ally = EntityType.GOBLIN;
-                break;
-            default :
-                throw new IllegalStateException("Unexpected value: " + type);
-        }
+        EntityType ally = switch (type) {
+            case ELF -> EntityType.HUMAN;
+            case GOBLIN -> EntityType.ORC;
+            case HUMAN -> EntityType.ELF;
+            case ORC -> EntityType.GOBLIN;
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
 
         // check if ally
         if (otherEntity.getType() == ally) {
+            System.out.println(otherEntity.getFigure() +" is an ally.");
             // ally, exchange message
             exchangeMessageWith(otherEntity);
         }
         // check if same type and Master
         else if (otherEntity.getType() == type && otherEntity instanceof Master masterEntity) {
+            System.out.println(otherEntity.getFigure() +" is my master.");
             // give messages to master
             otherEntity.addMessages(messages);
 
@@ -104,6 +95,7 @@ public abstract class HumanBeing extends Entity {
             }
         }
         else {
+            System.out.println(otherEntity.getFigure() +" is an enemy.");
             // enemy, fight
             fightWith(otherEntity);
         }
@@ -167,13 +159,15 @@ public abstract class HumanBeing extends Entity {
         return saveBaseMessage;
     }
 
+    public String getPosition() {
+        return "x=" + x + ", y=" + y;
+    }
+
     @Override
     public String toString() {
         return "HumanBeing{" +
                 "type=" + type +
                 ", figure='" + figure + '\'' +
-                ", forwardDirections=" + forwardDirections +
-                ", backwardDirections=" + backwardDirections +
                 ", messages=" + messages +
                 ", baseMessage=" + baseMessage +
                 ", energyPoints=" + energyPoints +

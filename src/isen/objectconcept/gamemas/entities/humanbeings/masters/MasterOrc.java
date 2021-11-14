@@ -7,8 +7,8 @@ public class MasterOrc extends Orc implements Master {
 
 
     private static MasterOrc masterOrc;
-    private MasterOrc(){
-        super("OM");
+    private MasterOrc() {
+        super(0, 0, "OM");
     }
 
     public static MasterOrc getInstance(){

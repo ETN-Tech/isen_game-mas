@@ -10,12 +10,7 @@ import java.util.List;
 
 public class Elf extends HumanBeing {
 
-    public Elf(String figure) {
-        super(
-                EntityType.ELF,
-                figure,
-                new ArrayList<>(List.of(Direction.W, Direction.NW, Direction.N)),
-                new MessageElf("Elf message")
-        );
+    public Elf(int x, int y, String figure) {
+        super(x, y, EntityType.ELF, figure, new ArrayList<>(List.of(Direction.W, Direction.NW, Direction.N)), new MessageElf("Elf message"));
     }
 }

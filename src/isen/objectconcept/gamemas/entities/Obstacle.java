@@ -4,7 +4,7 @@ import isen.objectconcept.gamemas.enums.EntityType;
 
 public class Obstacle extends Entity {
 
-    public Obstacle() {
-        super(EntityType.OBSTACLE, "x ");
+    public Obstacle(int x, int y) {
+        super(x, y, EntityType.OBSTACLE, "x ");
     }
 }

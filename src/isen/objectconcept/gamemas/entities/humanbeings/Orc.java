@@ -9,12 +9,7 @@ import java.util.List;
 
 public class Orc extends HumanBeing {
 
-    public Orc(String figure) {
-        super(
-                EntityType.ORC,
-                figure,
-                new ArrayList<>(List.of(Direction.S, Direction.SW, Direction.W)),
-                new MessageOrc("Orc message")
-        );
+    public Orc(int x, int y, String figure) {
+        super(x, y, EntityType.ORC, figure, new ArrayList<>(List.of(Direction.S, Direction.SW, Direction.W)), new MessageOrc("Orc message"));
     }
 }
